@@ -1,3 +1,5 @@
+module;
+#include <string_view>
 export module md.logger;
 
 import std;
@@ -8,7 +10,18 @@ export namespace md {
 
 namespace LogLevel {
 
-using Type = const char*;
+template <std::size_t N>
+struct Type {
+    char data[N];
+
+    constexpr Type(const char (&str)[N]) {
+        std::copy_n(str, N, data);
+    }
+
+    constexpr operator std::string_view() const {
+        return {data, N - 1};
+    }
+};
 
 constexpr Type Trace = "TRACE";
 constexpr Type Debug = "DEBUG";
@@ -29,7 +42,7 @@ public:
     inline void log(std::format_string<Args...> format, Args&&... args) {
         std::println(
             "[{}] {}: {}",
-            type,
+            std::string_view(type),
             category,
             std::format(format, std::forward<Args>(args)...)
         );
