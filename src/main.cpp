@@ -1,5 +1,9 @@
+import md.logger;
+
 import std;
 
 int main() {
-    std::println("Hello World!");
+    md::Logger logger("Main");
+
+    return 0;
 }

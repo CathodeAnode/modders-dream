@@ -1,0 +1,9 @@
+set(SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    PARENT_SCOPE
+)
+
+set(MODULES
+    ${CMAKE_CURRENT_SOURCE_DIR}/logger.cppm
+    PARENT_SCOPE
+)
