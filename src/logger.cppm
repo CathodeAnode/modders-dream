@@ -4,8 +4,7 @@ import std;
 
 export namespace md {
 
-// TODO: Make argc/argv parser so that logger can have disableable levels of
-// logging
+// TODO: Make argc/argv parser so that logger can have disableable levels of logging
 
 namespace LogLevel {
 
