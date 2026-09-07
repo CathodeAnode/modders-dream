@@ -11,11 +11,11 @@ namespace LogLevel {
 using Type = const char*;
 
 constexpr Type Trace = "TRACE";
-constexpr Type Debug = "Debug";
-constexpr Type Info = "Info";
-constexpr Type Warn = "Warn";
-constexpr Type Error = "Error";
-constexpr Type Fatal = "Fatal";
+constexpr Type Debug = "DEBUG";
+constexpr Type Info = "INFO";
+constexpr Type Warn = "WARN";
+constexpr Type Error = "ERROR";
+constexpr Type Fatal = "FATAL";
 
 } // namespace LogLevel
 
