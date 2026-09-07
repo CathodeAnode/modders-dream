@@ -1,5 +1,3 @@
-module;
-#include <string_view>
 export module md.logger;
 
 import std;
