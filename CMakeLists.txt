@@ -33,6 +33,11 @@ target_sources(modders-dream
     ${MODULES}
 )
 
+target_link_libraries(modders-dream PRIVATE
+    bgfx
+    SDL3-static
+)
+
 set_target_properties(modders-dream PROPERTIES
     CXX_STANDARD 23
     CXX_STANDARD_REQUIRED YES
