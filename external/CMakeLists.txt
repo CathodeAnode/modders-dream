@@ -7,7 +7,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS OFF)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w")
 
-add_subdirectory(bgfx.cmake SDL)
+add_subdirectory(bgfx.cmake)
+add_subdirectory(SDL)
 
 # Reenable so that this repo's code recieves warnings
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_BEFORE_EXTERNAL}")
