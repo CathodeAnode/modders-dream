@@ -8,6 +8,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w")
 
 add_subdirectory(bgfx.cmake)
+
+set(SDL_SHARED OFF)
+set(SDL_STATIC ON)
 add_subdirectory(SDL)
 
 # Reenable so that this repo's code recieves warnings
