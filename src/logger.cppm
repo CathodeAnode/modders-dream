@@ -10,7 +10,8 @@ export namespace md {
 
 namespace LogLevel {
 
-using Type = md::fixed_string;
+template <std::size_t N>
+using Type = fixed_string<N>;
 
 constexpr Type Trace = "TRACE";
 constexpr Type Debug = "DEBUG";

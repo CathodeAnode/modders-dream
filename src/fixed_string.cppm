@@ -2,7 +2,7 @@ export module md.fixed_string;
 
 import std;
 
-namespace md {
+export namespace md {
 
 template <std::size_t N>
 class fixed_string {
