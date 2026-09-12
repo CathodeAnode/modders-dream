@@ -35,7 +35,7 @@ target_sources(modders-dream
 
 target_link_libraries(modders-dream PRIVATE
     bgfx
-    SDL3-static
+    glfw
 )
 
 set_target_properties(modders-dream PROPERTIES
