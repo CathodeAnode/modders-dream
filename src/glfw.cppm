@@ -489,6 +489,10 @@ public:
 #endif
     }
 
+    inline void get_framebuffer_size(int* width, int* height) {
+        glfwGetFramebufferSize(this->window, width, height);
+    }
+
     inline bool should_close() const {
         return glfwWindowShouldClose(this->window);
     }
