@@ -1,7 +1,5 @@
 export module md.logger;
 
-import md.fixed_string;
-
 import std;
 
 export namespace md {
@@ -10,15 +8,12 @@ export namespace md {
 
 namespace LogLevel {
 
-template <std::size_t N>
-using Type = fixed_string<N>;
-
-constexpr Type Trace = "TRACE";
-constexpr Type Debug = "DEBUG";
-constexpr Type Info = "INFO";
-constexpr Type Warn = "WARN";
-constexpr Type Error = "ERROR";
-constexpr Type Fatal = "FATAL";
+constexpr std::string_view Trace = "TRACE";
+constexpr std::string_view Debug = "DEBUG";
+constexpr std::string_view Info = "INFO";
+constexpr std::string_view Warn = "WARN";
+constexpr std::string_view Error = "ERROR";
+constexpr std::string_view Fatal = "FATAL";
 
 } // namespace LogLevel
 
@@ -28,22 +23,12 @@ public:
 
     Logger(const std::string& category) : category(category) {}
 
-    template <LogLevel::Type type, typename... Args>
-    inline void log(std::format_string<Args...> format, Args&&... args) {
+    template <typename... Args>
+    inline void log(std::string_view log_level, std::format_string<Args...> format, Args&&... args) {
         std::println(
             "[{}] {}: {}",
-            std::string_view(type),
-            category,
-            std::format(format, std::forward<Args>(args)...)
-        );
-    }
-
-    template <md::fixed_string category, LogLevel::Type type, typename... Args>
-    static inline void log(std::format_string<Args...> format, Args&&... args) {
-        std::println(
-            "[{}] {}: {}",
-            std::string_view(type),
-            category,
+            log_level,
+            this->category,
             std::format(format, std::forward<Args>(args)...)
         );
     }
