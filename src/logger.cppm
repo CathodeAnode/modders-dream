@@ -1,10 +1,13 @@
 export module md.logger;
 
+import md.error;
+
 import std;
 
 export namespace md {
 
 // TODO: Make argc/argv parser so that logger can have disableable levels of logging
+// TODO: Add way to log into a file
 
 namespace LogLevel {
 
@@ -30,6 +33,16 @@ public:
             log_level,
             this->category,
             std::format(format, std::forward<Args>(args)...)
+        );
+    }
+
+    inline static void log(md::Error error) {
+        std::println(
+            "[{}] {}: {}: {}",
+            LogLevel::Error,
+            error.system,
+            static_cast<std::uint32_t>(error.code),
+            error.description
         );
     }
 };

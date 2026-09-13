@@ -3,6 +3,7 @@ module;
 export module md.glfw;
 
 import md.logger;
+import md.error;
 import md.zstring_view;
 
 import std;
@@ -379,21 +380,46 @@ struct EventConfig {
 // Forward decleration for Window & Context classes
 namespace callback {
 
+void initialize_error();
 void initialize_global();
 void initialize_window(GLFWwindow* window);
 
 } // namespace callback
 
-class Window {
+class Window : public md::ErrorHandler {
 public:
     inline Window(int width, int height, md::zstring_view title) {
         this->window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+
+        if (!this->window) {
+            md::Error error{
+                .system = "Window",
+                .operation = "glfwCreateWindow",
+                .description = "Failed to initialize window",
+                .code = md::ErrorCode::InitializationFailed
+            };
+            submit_error(error);
+            return;
+        }
+
         this->windows[window] = this;
         callback::initialize_window(this->window);
     }
 
     inline Window(int width, int height, md::zstring_view title, Monitor monitor) {
         this->window = glfwCreateWindow(width, height, title, monitor.get_native_handle(), nullptr);
+
+        if (!this->window) {
+            md::Error error{
+                .system = "Window",
+                .operation = "glfwCreateWindow",
+                .description = "Failed to initialize window",
+                .code = md::ErrorCode::InitializationFailed
+            };
+            submit_error(error);
+            return;
+        }
+
         this->windows[window] = this;
         callback::initialize_window(this->window);
     }
@@ -464,10 +490,20 @@ private:
     inline static std::unordered_map<GLFWwindow*, Window*> windows;
 };
 
-class Context {
+class Context : public md::ErrorHandler {
 public:
     Context() {
-        glfwInit();
+        callback::initialize_error();
+        if (!glfwInit()) {
+            Error error = {
+                .system = "Context",
+                .operation = "glfwInit",
+                .description = "Failed to initialize GLFW",
+                .code = md::ErrorCode::InitializationFailed
+            };
+            ErrorHandler::submit_error(error);
+            return;
+        }
         callback::initialize_global();
     }
 
@@ -602,10 +638,15 @@ void error(int error_code, const char* description) {
 
 // Context class calls it automatically
 // Nothing would (probably) happen if you call it twice
+void initialize_error() {
+    glfwSetErrorCallback(error);
+}
+
+// Context class calls it automatically
+// Nothing would (probably) happen if you call it twice
 void initialize_global() {
     glfwSetJoystickCallback(joystick);
     glfwSetMonitorCallback(monitor);
-    glfwSetErrorCallback(error);
 }
 
 // Window class calls it automatically
