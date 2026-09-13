@@ -316,6 +316,15 @@ enum class WindowHintValue : unsigned int {
     WaylandDisableLibdecor = GLFW_WAYLAND_DISABLE_LIBDECOR
 };
 
+enum class Platform : int {
+    Null = GLFW_PLATFORM_NULL,
+    Unavailable = GLFW_PLATFORM_UNAVAILABLE,
+    Wayland = GLFW_PLATFORM_WAYLAND,
+    X11 = GLFW_PLATFORM_X11,
+    Win32 = GLFW_PLATFORM_WIN32,
+    Cocoa = GLFW_PLATFORM_COCOA
+};
+
 using VideoMode = GLFWvidmode;
 
 inline constexpr auto poll_events = glfwPollEvents;
@@ -330,6 +339,10 @@ inline constexpr void window_hint(WindowHint hint, int value) {
 
 inline constexpr void window_hint(int hint, int value) {
     glfwWindowHint(hint, value);
+}
+
+inline constexpr Platform get_platform() {
+    return static_cast<Platform>(glfwGetPlatform());
 }
 
 class Monitor {
