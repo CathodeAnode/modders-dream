@@ -1,6 +1,25 @@
 module;
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+
+#ifdef _WIN32
+    #define GLFW_EXPOSE_NATIVE_WIN32
+#elifdef __APPLE__
+    #define GLFW_EXPOSE_NATIVE_COCOA
+#elifdef __linux__
+    #define GLFW_EXPOSE_NATIVE_X11
+    #define GLFW_EXPOSE_NATIVE_WAYLAND
+#endif
+#include <GLFW/glfw3native.h>
+
+// Undefine "True" and "False" which was defined by X11 without any prefixes
+#ifdef True
+    #undef True
+#endif
+#ifdef False
+    #undef False
+#endif
+
 export module md.glfw;
 
 import md.logger;
@@ -159,11 +178,11 @@ enum class MouseButton {
     Left = GLFW_MOUSE_BUTTON_LEFT,     // Equivilant to GLFW_MOUSE_BUTTON_1
     Right = GLFW_MOUSE_BUTTON_RIGHT,   // Equivilant to GLFW_MOUSE_BUTTON_2
     Middle = GLFW_MOUSE_BUTTON_MIDDLE, // Equivilant to GLFW_MOUSE_BUTTON_3
-    Button4 = GLFW_MOUSE_BUTTON_4,
-    Button5 = GLFW_MOUSE_BUTTON_5,
-    Button6 = GLFW_MOUSE_BUTTON_6,
-    Button7 = GLFW_MOUSE_BUTTON_7,
-    Button8 = GLFW_MOUSE_BUTTON_8
+    Auxilliary4 = GLFW_MOUSE_BUTTON_4,
+    Auxilliary5 = GLFW_MOUSE_BUTTON_5,
+    Auxilliary6 = GLFW_MOUSE_BUTTON_6,
+    Auxilliary7 = GLFW_MOUSE_BUTTON_7,
+    Auxilliary8 = GLFW_MOUSE_BUTTON_8
 };
 
 struct WindowPosEvent {
@@ -342,8 +361,19 @@ inline constexpr void window_hint(int hint, int value) {
     glfwWindowHint(hint, value);
 }
 
-inline constexpr Platform get_platform() {
+inline constexpr Platform get_platform() noexcept {
     return static_cast<Platform>(glfwGetPlatform());
+}
+
+void* get_display() noexcept {
+    switch (get_platform()) {
+        case Platform::Wayland:
+            return glfwGetWaylandDisplay();
+        case Platform::X11:
+            return glfwGetX11Display();
+        default:
+            return nullptr;
+    }
 }
 
 class Monitor {
@@ -440,6 +470,23 @@ public:
 
     inline ~Window() {
         glfwDestroyWindow(this->window);
+    }
+
+    void* get_window() noexcept {
+#ifdef _WIN32
+        return glfwGetWin32Window(this->window);
+#elifdef __APPLE__
+        return glfwGetCocoaWindow(this->window);
+#elifdef __linux__
+        switch (get_platform()) {
+            case Platform::Wayland:
+                return glfwGetWaylandWindow(this->window);
+            case Platform::X11:
+                return reinterpret_cast<void*>(static_cast<std::uintptr_t>(glfwGetX11Window(this->window)));
+            default:
+                return nullptr;
+        }
+#endif
     }
 
     inline bool should_close() const {
