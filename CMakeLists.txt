@@ -38,6 +38,10 @@ target_link_libraries(modders-dream PRIVATE
     glfw
 )
 
+target_include_directories(modders-dream PRIVATE
+    ${CMAKE_SOURCE_DIR}/external/eigen
+)
+
 set_target_properties(modders-dream PROPERTIES
     CXX_STANDARD 23
     CXX_STANDARD_REQUIRED YES
