@@ -2,7 +2,7 @@ module;
 #include <Eigen/Dense>
 export module md.math;
 
-namespace md::math {
+export namespace md::math {
 
 template <typename Type, int Size>
 using Vector = Eigen::Vector<Type, Size>;
