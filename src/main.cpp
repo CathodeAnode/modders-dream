@@ -1,16 +1,18 @@
 import md.logger;
 import md.glfw;
+import md.renderer.diligent;
 
 import std;
 
 using namespace md;
+namespace dg = md::renderer::diligent;
 
 int main() {
-    glfw::Context context;
+    glfw::Context glfw_context;
 
-    if (context.has_error()) {
-        Logger::log(context.get_error());
-        return static_cast<int>(context.get_error().code);
+    if (glfw_context.has_error()) {
+        Logger::log(glfw_context.get_error());
+        return static_cast<int>(glfw_context.get_error().code);
     }
 
     glfw::window_hint(glfw::WindowHint::ClientAPI, glfw::WindowHintValue::NoAPI);
@@ -22,6 +24,62 @@ int main() {
         return static_cast<int>(window.get_error().code);
     }
 
+    Logger renderer_logger("Renderer");
+    dg::NativeWindow native_window;
+#if defined(__linux__)
+    native_window.pDisplay = glfw::get_display();
+    switch (glfw::get_platform()) {
+        case glfw::Platform::X11:
+            native_window.WindowId = static_cast<dg::Uint32>(
+                reinterpret_cast<std::uintptr_t>(window.get_window())
+            );
+            break;
+        case glfw::Platform::Wayland:
+            native_window.pWaylandSurface = window.get_window();
+            break;
+        default:
+            renderer_logger.log(LogLevel::Fatal, "Unsupported window platform for Vulkan");
+            return 1;
+    }
+#elif defined(_WIN32)
+    native_window.hWnd = window.get_window();
+#else
+    renderer_logger.log(LogLevel::Fatal, "Native Vulkan window setup is not implemented for this platform");
+    return 1;
+#endif
+
+    auto* factory = dg::LoadAndGetEngineFactoryVk();
+    if (!factory) {
+        renderer_logger.log(LogLevel::Fatal, "Failed to load the Vulkan engine");
+        return 1;
+    }
+
+    dg::RefCntAutoPtr<dg::IRenderDevice> device;
+    dg::RefCntAutoPtr<dg::IDeviceContext> device_context;
+    dg::EngineVkCreateInfo engine_info;
+    factory->CreateDeviceAndContextsVk(engine_info, &device, &device_context);
+    if (!device || !device_context) {
+        renderer_logger.log(LogLevel::Fatal, "Failed to create the Vulkan device and context");
+        return 1;
+    }
+
+    int width = 0;
+    int height = 0;
+    window.get_framebuffer_size(&width, &height);
+
+    dg::SwapChainDesc swap_chain_desc;
+    swap_chain_desc.Width = static_cast<dg::Uint32>(std::max(width, 1));
+    swap_chain_desc.Height = static_cast<dg::Uint32>(std::max(height, 1));
+    swap_chain_desc.DepthBufferFormat = dg::TEXTURE_FORMAT::TEX_FORMAT_UNKNOWN;
+
+    dg::RefCntAutoPtr<dg::ISwapChain> swap_chain;
+    factory->CreateSwapChainVk(device, device_context, swap_chain_desc, native_window, &swap_chain);
+    if (!swap_chain) {
+        renderer_logger.log(LogLevel::Fatal, "Failed to create the Vulkan swap chain");
+        return 1;
+    }
+
+    constexpr float clear_color[] = {1.0f, 0.0f, 0.0f, 1.0f};
     bool running = true;
     while (running && !window.should_close()) {
         glfw::poll_events();
@@ -31,7 +89,38 @@ int main() {
                 running = false;
             }
         }
+        window.clear_events();
+        if (!running || window.should_close()) {
+            break;
+        }
+
+        window.get_framebuffer_size(&width, &height);
+        if (width <= 0 || height <= 0) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(16));
+            continue;
+        }
+
+        const auto& desc = swap_chain->GetDesc();
+        if (desc.Width != static_cast<dg::Uint32>(width) ||
+            desc.Height != static_cast<dg::Uint32>(height)) {
+            swap_chain->Resize(static_cast<dg::Uint32>(width), static_cast<dg::Uint32>(height));
+        }
+
+        auto* render_target = swap_chain->GetCurrentBackBufferRTV();
+        device_context->SetRenderTargets(
+            1,
+            &render_target,
+            nullptr,
+            dg::RESOURCE_STATE_TRANSITION_MODE::RESOURCE_STATE_TRANSITION_MODE_TRANSITION
+        );
+        device_context->ClearRenderTarget(
+            render_target,
+            clear_color,
+            dg::RESOURCE_STATE_TRANSITION_MODE::RESOURCE_STATE_TRANSITION_MODE_TRANSITION
+        );
+        swap_chain->Present(1);
     }
 
+    device_context->WaitForIdle();
     return 0;
 }
