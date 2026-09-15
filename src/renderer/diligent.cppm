@@ -45,9 +45,9 @@ module;
 #include <Primitives/interface/MemoryAllocator.h>
 #include <Primitives/interface/Object.h>
 #include <Primitives/interface/ReferenceCounters.h>
-export module md.diligent;
+export module md.renderer.diligent;
 
-export namespace md::diligent {
+export namespace md::renderer::diligent {
 
 // Reference-counted ownership.
 template <typename T>
@@ -492,4 +492,4 @@ using ShaderResourceVariableX = Diligent::ShaderResourceVariableX;
 using MultiDrawAttribsX = Diligent::MultiDrawAttribsX;
 using MultiDrawIndexedAttribsX = Diligent::MultiDrawIndexedAttribsX;
 
-} // namespace md::diligent
+} // namespace md::renderer::diligent
