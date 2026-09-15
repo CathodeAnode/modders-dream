@@ -366,6 +366,7 @@ inline constexpr Platform get_platform() noexcept {
 }
 
 void* get_display() noexcept {
+#ifdef __linux__
     switch (get_platform()) {
         case Platform::Wayland:
             return glfwGetWaylandDisplay();
@@ -374,6 +375,8 @@ void* get_display() noexcept {
         default:
             return nullptr;
     }
+#endif
+    return nullptr;
 }
 
 class Monitor {
@@ -487,6 +490,7 @@ public:
                 return nullptr;
         }
 #endif
+        return nullptr;
     }
 
     inline void get_framebuffer_size(int* width, int* height) {
