@@ -45,6 +45,178 @@ module;
 #include <Primitives/interface/MemoryAllocator.h>
 #include <Primitives/interface/Object.h>
 #include <Primitives/interface/ReferenceCounters.h>
+
+// Factories require linking the corresponding Diligent backend when called.
+// Vulkan factory
+#if PLATFORM_WIN32 || PLATFORM_ANDROID || PLATFORM_LINUX || PLATFORM_MACOS || PLATFORM_IOS || PLATFORM_TVOS
+    #include <Graphics/GraphicsEngineVulkan/interface/EngineFactoryVk.h>
+#endif
+
+// Native interfaces are available when their SDK headers are on the include path.
+// Vulkan native interfaces
+#if (PLATFORM_WIN32 || PLATFORM_ANDROID || PLATFORM_LINUX || PLATFORM_MACOS || PLATFORM_IOS || PLATFORM_TVOS) && __has_include(<vulkan/vulkan.h>)
+    // SDK types must precede Diligent interfaces; preserve this include order.
+    // clang-format off
+    #include <vulkan/vulkan.h>
+    // clang-format on
+
+    #include <Graphics/GraphicsEngineVulkan/interface/BottomLevelASVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/BufferViewVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/BufferVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/CommandQueueVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/DeviceContextVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/DeviceMemoryVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/FenceVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/FramebufferVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/PipelineStateCacheVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/PipelineStateVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/QueryVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/RenderDeviceVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/RenderPassVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/SamplerVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/ShaderBindingTableVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/ShaderResourceBindingVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/ShaderVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/SwapChainVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/TextureViewVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/TextureVk.h>
+    #include <Graphics/GraphicsEngineVulkan/interface/TopLevelASVk.h>
+#endif
+
+// OpenGL factory
+#if PLATFORM_WIN32 || PLATFORM_ANDROID || PLATFORM_LINUX || PLATFORM_MACOS || PLATFORM_IOS || PLATFORM_WEB
+    #include <Graphics/GraphicsEngineOpenGL/interface/EngineFactoryOpenGL.h>
+#endif
+
+// OpenGL native interfaces
+#if (PLATFORM_WIN32 || PLATFORM_ANDROID || PLATFORM_LINUX || PLATFORM_MACOS || PLATFORM_IOS || PLATFORM_WEB) && (__has_include(<GL/glcorearb.h>) || __has_include(<GL/gl.h>) || __has_include(<GLES3/gl3.h>) || __has_include(<OpenGL/gl3.h>) || __has_include(<OpenGLES/ES3/gl.h>))
+    #if PLATFORM_WIN32
+        #include <windows.h>
+    #endif
+    #if __has_include(<GL/glcorearb.h>)
+        #include <GL/glcorearb.h>
+    #elif __has_include(<GL/gl.h>)
+        #include <GL/gl.h>
+    #elif __has_include(<GLES3/gl3.h>)
+        #include <GLES3/gl3.h>
+    #elif __has_include(<OpenGL/gl3.h>)
+        #include <OpenGL/gl3.h>
+    #else
+        #include <OpenGLES/ES3/gl.h>
+    #endif
+    #include <Graphics/GraphicsEngineOpenGL/interface/BufferGL.h>
+    #include <Graphics/GraphicsEngineOpenGL/interface/BufferViewGL.h>
+    #include <Graphics/GraphicsEngineOpenGL/interface/DeviceContextGL.h>
+    #include <Graphics/GraphicsEngineOpenGL/interface/FenceGL.h>
+    #include <Graphics/GraphicsEngineOpenGL/interface/PipelineStateGL.h>
+    #include <Graphics/GraphicsEngineOpenGL/interface/QueryGL.h>
+    #include <Graphics/GraphicsEngineOpenGL/interface/RenderDeviceGL.h>
+    #include <Graphics/GraphicsEngineOpenGL/interface/SamplerGL.h>
+    #include <Graphics/GraphicsEngineOpenGL/interface/ShaderGL.h>
+    #include <Graphics/GraphicsEngineOpenGL/interface/ShaderResourceBindingGL.h>
+    #include <Graphics/GraphicsEngineOpenGL/interface/SwapChainGL.h>
+    #include <Graphics/GraphicsEngineOpenGL/interface/TextureGL.h>
+    #include <Graphics/GraphicsEngineOpenGL/interface/TextureViewGL.h>
+#endif
+
+// D3D11 factory
+#if PLATFORM_WIN32 || PLATFORM_UNIVERSAL_WINDOWS
+    #include <Graphics/GraphicsEngineD3D11/interface/EngineFactoryD3D11.h>
+#endif
+
+// D3D11 native interfaces
+#if PLATFORM_WIN32 || PLATFORM_UNIVERSAL_WINDOWS
+    // SDK types must precede Diligent interfaces; preserve this include order.
+    // clang-format off
+    #include <d3d11.h>
+    #include <dxgi1_4.h>
+    // clang-format on
+
+    #include <Graphics/GraphicsEngineD3D11/interface/BufferD3D11.h>
+    #include <Graphics/GraphicsEngineD3D11/interface/BufferViewD3D11.h>
+    #include <Graphics/GraphicsEngineD3D11/interface/DeviceContextD3D11.h>
+    #include <Graphics/GraphicsEngineD3D11/interface/DeviceMemoryD3D11.h>
+    #include <Graphics/GraphicsEngineD3D11/interface/FenceD3D11.h>
+    #include <Graphics/GraphicsEngineD3D11/interface/PipelineStateD3D11.h>
+    #include <Graphics/GraphicsEngineD3D11/interface/QueryD3D11.h>
+    #include <Graphics/GraphicsEngineD3D11/interface/RenderDeviceD3D11.h>
+    #include <Graphics/GraphicsEngineD3D11/interface/SamplerD3D11.h>
+    #include <Graphics/GraphicsEngineD3D11/interface/ShaderD3D11.h>
+    #include <Graphics/GraphicsEngineD3D11/interface/ShaderResourceBindingD3D11.h>
+    #include <Graphics/GraphicsEngineD3D11/interface/SwapChainD3D11.h>
+    #include <Graphics/GraphicsEngineD3D11/interface/TextureD3D11.h>
+    #include <Graphics/GraphicsEngineD3D11/interface/TextureViewD3D11.h>
+    #include <Graphics/GraphicsEngineD3DBase/interface/ShaderD3D.h>
+    #include <Graphics/GraphicsEngineD3DBase/interface/ShaderResourceVariableD3D.h>
+#endif
+
+// D3D12 factory
+#if PLATFORM_WIN32 || PLATFORM_UNIVERSAL_WINDOWS
+    #include <Graphics/GraphicsEngineD3D12/interface/EngineFactoryD3D12.h>
+#endif
+
+// D3D12 native interfaces
+#if PLATFORM_WIN32 || PLATFORM_UNIVERSAL_WINDOWS
+    // SDK types must precede Diligent interfaces; preserve this include order.
+    // clang-format off
+    #include <d3d12.h>
+    #include <dxgi1_4.h>
+    // clang-format on
+
+    #include <Graphics/GraphicsEngineD3D12/interface/BottomLevelASD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/BufferD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/BufferViewD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/CommandQueueD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/DeviceContextD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/DeviceMemoryD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/FenceD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/PipelineStateCacheD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/PipelineStateD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/QueryD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/RenderDeviceD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/SamplerD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/ShaderBindingTableD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/ShaderD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/ShaderResourceBindingD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/SwapChainD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/TextureD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/TextureViewD3D12.h>
+    #include <Graphics/GraphicsEngineD3D12/interface/TopLevelASD3D12.h>
+#endif
+
+// Metal factory
+#if PLATFORM_MACOS || PLATFORM_IOS || PLATFORM_TVOS || PLATFORM_VISIONOS
+    #include <Graphics/GraphicsEngineMetal/interface/EngineFactoryMtl.h>
+#endif
+
+// Metal native interfaces
+#if (PLATFORM_MACOS || PLATFORM_IOS || PLATFORM_TVOS || PLATFORM_VISIONOS) && defined(__OBJC__)
+    // SDK types must precede Diligent interfaces; preserve this include order.
+    // clang-format off
+    #import <Metal/Metal.h>
+    // clang-format on
+
+    #include <Graphics/GraphicsEngineMetal/interface/BottomLevelASMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/BufferMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/BufferViewMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/CommandQueueMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/DeviceContextMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/DeviceMemoryMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/FenceMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/PipelineStateCacheMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/PipelineStateMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/QueryMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/RasterizationRateMapMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/RenderDeviceMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/SamplerMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/ShaderMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/ShaderResourceBindingMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/SwapChainMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/TextureMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/TextureViewMtl.h>
+    #include <Graphics/GraphicsEngineMetal/interface/TopLevelASMtl.h>
+#endif
+
 export module md.renderer.diligent;
 
 export namespace md::renderer::diligent {
@@ -491,5 +663,183 @@ using RenderDeviceX_N = Diligent::RenderDeviceX_N;
 using ShaderResourceVariableX = Diligent::ShaderResourceVariableX;
 using MultiDrawAttribsX = Diligent::MultiDrawAttribsX;
 using MultiDrawIndexedAttribsX = Diligent::MultiDrawIndexedAttribsX;
+
+// Vulkan factory
+#if PLATFORM_WIN32 || PLATFORM_ANDROID || PLATFORM_LINUX || PLATFORM_MACOS || PLATFORM_IOS || PLATFORM_TVOS
+using IEngineFactoryVk = Diligent::IEngineFactoryVk;
+using GetEngineFactoryVkType = Diligent::GetEngineFactoryVkType;
+using Diligent::LoadAndGetEngineFactoryVk;
+    #if DILIGENT_VK_EXPLICIT_LOAD
+using Diligent::LoadGraphicsEngineVk;
+    #else
+using Diligent::GetEngineFactoryVk;
+    #endif
+#endif
+
+// Vulkan native interfaces
+#if (PLATFORM_WIN32 || PLATFORM_ANDROID || PLATFORM_LINUX || PLATFORM_MACOS || PLATFORM_IOS || PLATFORM_TVOS) && __has_include(<vulkan/vulkan.h>)
+using IBottomLevelASVk = Diligent::IBottomLevelASVk;
+using IBufferViewVk = Diligent::IBufferViewVk;
+using IBufferVk = Diligent::IBufferVk;
+using ICommandQueueVk = Diligent::ICommandQueueVk;
+using IDeviceContextVk = Diligent::IDeviceContextVk;
+using DeviceMemoryRangeVk = Diligent::DeviceMemoryRangeVk;
+using IDeviceMemoryVk = Diligent::IDeviceMemoryVk;
+using IFenceVk = Diligent::IFenceVk;
+using IFramebufferVk = Diligent::IFramebufferVk;
+using IPipelineStateCacheVk = Diligent::IPipelineStateCacheVk;
+using IPipelineStateVk = Diligent::IPipelineStateVk;
+using IQueryVk = Diligent::IQueryVk;
+using IRenderDeviceVk = Diligent::IRenderDeviceVk;
+using IRenderPassVk = Diligent::IRenderPassVk;
+using ISamplerVk = Diligent::ISamplerVk;
+using BindingTableVk = Diligent::BindingTableVk;
+using IShaderBindingTableVk = Diligent::IShaderBindingTableVk;
+using IShaderResourceBindingVk = Diligent::IShaderResourceBindingVk;
+using IShaderVk = Diligent::IShaderVk;
+using ISwapChainVk = Diligent::ISwapChainVk;
+using ITextureViewVk = Diligent::ITextureViewVk;
+using ITextureVk = Diligent::ITextureVk;
+using ITopLevelASVk = Diligent::ITopLevelASVk;
+#endif
+
+// OpenGL factory
+#if PLATFORM_WIN32 || PLATFORM_ANDROID || PLATFORM_LINUX || PLATFORM_MACOS || PLATFORM_IOS || PLATFORM_WEB
+using IEngineFactoryOpenGL = Diligent::IEngineFactoryOpenGL;
+using GetEngineFactoryOpenGLType = Diligent::GetEngineFactoryOpenGLType;
+using Diligent::LoadAndGetEngineFactoryOpenGL;
+    #if DILIGENT_OPENGL_EXPLICIT_LOAD
+using Diligent::LoadGraphicsEngineOpenGL;
+    #else
+using Diligent::GetEngineFactoryOpenGL;
+    #endif
+#endif
+
+// OpenGL native interfaces
+#if (PLATFORM_WIN32 || PLATFORM_ANDROID || PLATFORM_LINUX || PLATFORM_MACOS || PLATFORM_IOS || PLATFORM_WEB) && (__has_include(<GL/glcorearb.h>) || __has_include(<GL/gl.h>) || __has_include(<GLES3/gl3.h>) || __has_include(<OpenGL/gl3.h>) || __has_include(<OpenGLES/ES3/gl.h>))
+using IBufferGL = Diligent::IBufferGL;
+using IBufferViewGL = Diligent::IBufferViewGL;
+using IDeviceContextGL = Diligent::IDeviceContextGL;
+using IFenceGL = Diligent::IFenceGL;
+using IPipelineStateGL = Diligent::IPipelineStateGL;
+using IQueryGL = Diligent::IQueryGL;
+    #if PLATFORM_WIN32
+using NativeGLContextAttribsWin32 = Diligent::NativeGLContextAttribsWin32;
+    #elif PLATFORM_ANDROID
+using NativeGLContextAttribsAndroid = Diligent::NativeGLContextAttribsAndroid;
+    #endif
+    #if PLATFORM_WIN32 || PLATFORM_ANDROID
+using NativeGLContextAttribs = Diligent::NativeGLContextAttribs;
+    #endif
+using IRenderDeviceGL = Diligent::IRenderDeviceGL;
+using ISamplerGL = Diligent::ISamplerGL;
+using IShaderGL = Diligent::IShaderGL;
+using IShaderResourceBindingGL = Diligent::IShaderResourceBindingGL;
+using ISwapChainGL = Diligent::ISwapChainGL;
+using ITextureGL = Diligent::ITextureGL;
+using ITextureViewGL = Diligent::ITextureViewGL;
+#endif
+
+// D3D11 factory
+#if PLATFORM_WIN32 || PLATFORM_UNIVERSAL_WINDOWS
+using IEngineFactoryD3D11 = Diligent::IEngineFactoryD3D11;
+using GetEngineFactoryD3D11Type = Diligent::GetEngineFactoryD3D11Type;
+using Diligent::LoadAndGetEngineFactoryD3D11;
+    #if DILIGENT_D3D11_SHARED
+using Diligent::LoadGraphicsEngineD3D11;
+    #else
+using Diligent::GetEngineFactoryD3D11;
+    #endif
+#endif
+
+// D3D11 native interfaces
+#if PLATFORM_WIN32 || PLATFORM_UNIVERSAL_WINDOWS
+using HLSLShaderResourceDesc = Diligent::HLSLShaderResourceDesc;
+using IShaderD3D = Diligent::IShaderD3D;
+using IShaderResourceVariableD3D = Diligent::IShaderResourceVariableD3D;
+using IBufferD3D11 = Diligent::IBufferD3D11;
+using IBufferViewD3D11 = Diligent::IBufferViewD3D11;
+using IDeviceContextD3D11 = Diligent::IDeviceContextD3D11;
+using IDeviceMemoryD3D11 = Diligent::IDeviceMemoryD3D11;
+using IFenceD3D11 = Diligent::IFenceD3D11;
+using IPipelineStateD3D11 = Diligent::IPipelineStateD3D11;
+using IQueryD3D11 = Diligent::IQueryD3D11;
+using IRenderDeviceD3D11 = Diligent::IRenderDeviceD3D11;
+using ISamplerD3D11 = Diligent::ISamplerD3D11;
+using IShaderD3D11 = Diligent::IShaderD3D11;
+using IShaderResourceBindingD3D11 = Diligent::IShaderResourceBindingD3D11;
+using ISwapChainD3D11 = Diligent::ISwapChainD3D11;
+using ITextureD3D11 = Diligent::ITextureD3D11;
+using ITextureViewD3D11 = Diligent::ITextureViewD3D11;
+#endif
+
+// D3D12 factory
+#if PLATFORM_WIN32 || PLATFORM_UNIVERSAL_WINDOWS
+using IEngineFactoryD3D12 = Diligent::IEngineFactoryD3D12;
+using GetEngineFactoryD3D12Type = Diligent::GetEngineFactoryD3D12Type;
+using Diligent::LoadAndGetEngineFactoryD3D12;
+    #if DILIGENT_D3D12_SHARED
+using Diligent::LoadGraphicsEngineD3D12;
+    #else
+using Diligent::GetEngineFactoryD3D12;
+    #endif
+#endif
+
+// D3D12 native interfaces
+#if PLATFORM_WIN32 || PLATFORM_UNIVERSAL_WINDOWS
+using IBottomLevelASD3D12 = Diligent::IBottomLevelASD3D12;
+using IBufferD3D12 = Diligent::IBufferD3D12;
+using IBufferViewD3D12 = Diligent::IBufferViewD3D12;
+using ResourceTileMappingsD3D12 = Diligent::ResourceTileMappingsD3D12;
+using ICommandQueueD3D12 = Diligent::ICommandQueueD3D12;
+using IDeviceContextD3D12 = Diligent::IDeviceContextD3D12;
+using DeviceMemoryRangeD3D12 = Diligent::DeviceMemoryRangeD3D12;
+using IDeviceMemoryD3D12 = Diligent::IDeviceMemoryD3D12;
+using IFenceD3D12 = Diligent::IFenceD3D12;
+using IPipelineStateCacheD3D12 = Diligent::IPipelineStateCacheD3D12;
+using IPipelineStateD3D12 = Diligent::IPipelineStateD3D12;
+using IQueryD3D12 = Diligent::IQueryD3D12;
+using IRenderDeviceD3D12 = Diligent::IRenderDeviceD3D12;
+using ISamplerD3D12 = Diligent::ISamplerD3D12;
+using IShaderBindingTableD3D12 = Diligent::IShaderBindingTableD3D12;
+using IShaderD3D12 = Diligent::IShaderD3D12;
+using IShaderResourceBindingD3D12 = Diligent::IShaderResourceBindingD3D12;
+using ISwapChainD3D12 = Diligent::ISwapChainD3D12;
+using ITextureD3D12 = Diligent::ITextureD3D12;
+using ITextureViewD3D12 = Diligent::ITextureViewD3D12;
+using ITopLevelASD3D12 = Diligent::ITopLevelASD3D12;
+#endif
+
+// Metal factory
+#if PLATFORM_MACOS || PLATFORM_IOS || PLATFORM_TVOS || PLATFORM_VISIONOS
+using IEngineFactoryMtl = Diligent::IEngineFactoryMtl;
+using Diligent::GetEngineFactoryMtl;
+#endif
+
+// Metal native interfaces
+#if (PLATFORM_MACOS || PLATFORM_IOS || PLATFORM_TVOS || PLATFORM_VISIONOS) && defined(__OBJC__)
+using IBottomLevelASMtl = Diligent::IBottomLevelASMtl;
+using IBufferMtl = Diligent::IBufferMtl;
+using IBufferViewMtl = Diligent::IBufferViewMtl;
+using ICommandQueueMtl = Diligent::ICommandQueueMtl;
+using IDeviceContextMtl = Diligent::IDeviceContextMtl;
+using IDeviceMemoryMtl = Diligent::IDeviceMemoryMtl;
+using IFenceMtl = Diligent::IFenceMtl;
+using IPipelineStateCacheMtl = Diligent::IPipelineStateCacheMtl;
+using IPipelineStateMtl = Diligent::IPipelineStateMtl;
+using IQueryMtl = Diligent::IQueryMtl;
+using RasterizationRateMapDesc = Diligent::RasterizationRateMapDesc;
+using RasterizationRateLayerDesc = Diligent::RasterizationRateLayerDesc;
+using RasterizationRateMapCreateInfo = Diligent::RasterizationRateMapCreateInfo;
+using IRasterizationRateMapMtl = Diligent::IRasterizationRateMapMtl;
+using IRenderDeviceMtl = Diligent::IRenderDeviceMtl;
+using ISamplerMtl = Diligent::ISamplerMtl;
+using IShaderMtl = Diligent::IShaderMtl;
+using IShaderResourceBindingMtl = Diligent::IShaderResourceBindingMtl;
+using ISwapChainMtl = Diligent::ISwapChainMtl;
+using ITextureMtl = Diligent::ITextureMtl;
+using ITextureViewMtl = Diligent::ITextureViewMtl;
+using ITopLevelASMtl = Diligent::ITopLevelASMtl;
+#endif
 
 } // namespace md::renderer::diligent
