@@ -479,7 +479,7 @@ public:
 #ifdef _WIN32
         return glfwGetWin32Window(this->window);
 #elifdef __APPLE__
-        return glfwGetCocoaWindow(this->window);
+        return glfwGetCocoaView(this->window);
 #elifdef __linux__
         switch (get_platform()) {
             case Platform::Wayland:
