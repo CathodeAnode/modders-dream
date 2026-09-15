@@ -55,10 +55,9 @@ module;
 // Native interfaces are available when their SDK headers are on the include path.
 // Vulkan native interfaces
 #if (PLATFORM_WIN32 || PLATFORM_ANDROID || PLATFORM_LINUX || PLATFORM_MACOS || PLATFORM_IOS || PLATFORM_TVOS) && __has_include(<vulkan/vulkan.h>)
-    // SDK types must precede Diligent interfaces; preserve this include order.
-    // clang-format off
+// SDK types must precede Diligent interfaces; preserve this include order.
+
     #include <vulkan/vulkan.h>
-    // clang-format on
 
     #include <Graphics/GraphicsEngineVulkan/interface/BottomLevelASVk.h>
     #include <Graphics/GraphicsEngineVulkan/interface/BufferViewVk.h>
@@ -126,11 +125,10 @@ module;
 
 // D3D11 native interfaces
 #if PLATFORM_WIN32 || PLATFORM_UNIVERSAL_WINDOWS
-    // SDK types must precede Diligent interfaces; preserve this include order.
-    // clang-format off
+// SDK types must precede Diligent interfaces; preserve this include order.
+
     #include <d3d11.h>
     #include <dxgi1_4.h>
-    // clang-format on
 
     #include <Graphics/GraphicsEngineD3D11/interface/BufferD3D11.h>
     #include <Graphics/GraphicsEngineD3D11/interface/BufferViewD3D11.h>
@@ -157,11 +155,10 @@ module;
 
 // D3D12 native interfaces
 #if PLATFORM_WIN32 || PLATFORM_UNIVERSAL_WINDOWS
-    // SDK types must precede Diligent interfaces; preserve this include order.
-    // clang-format off
+// SDK types must precede Diligent interfaces; preserve this include order.
+
     #include <d3d12.h>
     #include <dxgi1_4.h>
-    // clang-format on
 
     #include <Graphics/GraphicsEngineD3D12/interface/BottomLevelASD3D12.h>
     #include <Graphics/GraphicsEngineD3D12/interface/BufferD3D12.h>
@@ -191,10 +188,9 @@ module;
 
 // Metal native interfaces
 #if (PLATFORM_MACOS || PLATFORM_IOS || PLATFORM_TVOS || PLATFORM_VISIONOS) && defined(__OBJC__)
-    // SDK types must precede Diligent interfaces; preserve this include order.
-    // clang-format off
+// SDK types must precede Diligent interfaces; preserve this include order.
+
     #import <Metal/Metal.h>
-    // clang-format on
 
     #include <Graphics/GraphicsEngineMetal/interface/BottomLevelASMtl.h>
     #include <Graphics/GraphicsEngineMetal/interface/BufferMtl.h>
