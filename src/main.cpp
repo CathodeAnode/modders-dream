@@ -1,5 +1,3 @@
-#include <bgfx/bgfx.h>
-
 import md.logger;
 import md.glfw;
 
@@ -24,31 +22,6 @@ int main() {
         return static_cast<int>(window.get_error().code);
     }
 
-    bgfx::Init init{};
-    init.type = bgfx::RendererType::Count;
-
-    if (glfw::get_platform() == glfw::Platform::Wayland) {
-        init.platformData.type = bgfx::NativeWindowHandleType::Wayland;
-    }
-
-    init.swapChain.ndt = glfw::get_display();
-    init.swapChain.nwh = window.get_window();
-
-    int width, height;
-    window.get_framebuffer_size(&width, &height);
-
-    init.swapChain.width = width > 0 ? uint32_t(width) : 1;
-    init.swapChain.height = height > 0 ? uint32_t(height) : 1;
-
-    if (!bgfx::init(init)) {
-        // TODO: Log here and maybe wrap around bgfx initialization a bit
-        return 1;
-    }
-
-    bgfx::setViewRect(0, 0, 0, bgfx::BackbufferRatio::Equal);
-
-    bgfx::setViewClear(0, BGFX_CLEAR_COLOR, 0xff0000ff);
-
     bool running = true;
     while (running && !window.should_close()) {
         glfw::poll_events();
@@ -58,12 +31,7 @@ int main() {
                 running = false;
             }
         }
-
-        bgfx::touch(0);
-        bgfx::frame();
     }
-
-    bgfx::shutdown();
 
     return 0;
 }
