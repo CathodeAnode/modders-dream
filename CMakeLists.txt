@@ -34,12 +34,13 @@ target_sources(modders-dream
 )
 
 target_link_libraries(modders-dream PRIVATE
-    bgfx
+    Diligent-Common
     glfw
 )
 
 target_include_directories(modders-dream PRIVATE
     ${CMAKE_SOURCE_DIR}/external/eigen
+    ${CMAKE_SOURCE_DIR}/external/DiligentCore
 )
 
 set_target_properties(modders-dream PROPERTIES
@@ -48,3 +49,12 @@ set_target_properties(modders-dream PROPERTIES
     CXX_EXTENSIONS NO
     CXX_MODULE_STD YES
 )
+
+# For DiligentCore
+if(WIN32)
+    target_compile_definitions(modders-dream PRIVATE PLATFORM_WIN32=1)
+elseif(APPLE)
+    target_compile_definitions(modders-dream PRIVATE PLATFORM_MACOS=1)
+elseif(UNIX)
+    target_compile_definitions(modders-dream PRIVATE PLATFORM_LINUX=1)
+endif()
