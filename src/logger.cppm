@@ -24,7 +24,7 @@ class Logger {
 public:
     const std::string category;
 
-    Logger(const std::string& category) : category(category) {}
+    Logger(const std::string category) : category(std::move(category)) {}
 
     template <typename... Args>
     inline void log(std::string_view log_level, std::format_string<Args...> format, Args&&... args) {
