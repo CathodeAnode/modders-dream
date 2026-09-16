@@ -269,6 +269,7 @@ using IFileStream = Diligent::IFileStream;
 
 // DebugOutput
 using DEBUG_MESSAGE_SEVERITY = Diligent::DEBUG_MESSAGE_SEVERITY;
+using enum DEBUG_MESSAGE_SEVERITY;
 using DebugMessageCallbackType = Diligent::DebugMessageCallbackType;
 
 // APIInfo
