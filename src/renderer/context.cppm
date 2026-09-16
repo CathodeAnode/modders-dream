@@ -139,7 +139,6 @@ public:
 #endif
 
         // Create swap chain
-
         math::Vector2i size = window.get_framebuffer_size();
         diligent::SwapChainDesc swap_chain_desc;
         swap_chain_desc.Width = static_cast<diligent::Uint32>(std::max(size.x(), 1));
