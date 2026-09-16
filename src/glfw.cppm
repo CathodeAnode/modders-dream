@@ -440,7 +440,7 @@ public:
 
         if (!this->window) {
             md::Error error{
-                .system = "Window",
+                .system = "glfw::Window",
                 .operation = "glfwCreateWindow",
                 .description = "Failed to initialize window",
                 .code = md::ErrorCode::InitializationFailed
@@ -458,7 +458,7 @@ public:
 
         if (!this->window) {
             md::Error error{
-                .system = "Window",
+                .system = "glfw::Window",
                 .operation = "glfwCreateWindow",
                 .description = "Failed to initialize window",
                 .code = md::ErrorCode::InitializationFailed
@@ -565,7 +565,7 @@ public:
         callback::initialize_error();
         if (!glfwInit()) {
             Error error = {
-                .system = "Context",
+                .system = "glfw::Context",
                 .operation = "glfwInit",
                 .description = "Failed to initialize GLFW",
                 .code = md::ErrorCode::InitializationFailed
