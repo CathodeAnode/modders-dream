@@ -4,6 +4,7 @@ import md.renderer.diligent;
 import md.glfw;
 import md.logger;
 import md.error;
+import md.math;
 
 import std;
 
@@ -136,6 +137,26 @@ public:
         submit_error(error);
         return;
 #endif
+
+        // Create swap chain
+
+        math::Vector2i size = window.get_framebuffer_size();
+        diligent::SwapChainDesc swap_chain_desc;
+        swap_chain_desc.Width = static_cast<diligent::Uint32>(std::max(size.x(), 1));
+        swap_chain_desc.Height = static_cast<diligent::Uint32>(std::max(size.y(), 1));
+        swap_chain_desc.DepthBufferFormat = diligent::TEXTURE_FORMAT::TEX_FORMAT_UNKNOWN;
+
+        factory->CreateSwapChainVk(device, device_context, swap_chain_desc, native_window, &swap_chain);
+        if (!swap_chain) {
+            md::Error error{
+                .system = "CreateSwapChainVk",
+                .operation = "Swap chain creation",
+                .description = "Failed to create swap chain.",
+                .code = md::ErrorCode::InitializationFailed
+            };
+            submit_error(error);
+            return;
+        }
     }
 
     ~Context() = default;
@@ -143,6 +164,7 @@ public:
 private:
     diligent::RefCntAutoPtr<diligent::IRenderDevice> device;
     diligent::RefCntAutoPtr<diligent::IDeviceContext> device_context;
+    diligent::RefCntAutoPtr<diligent::ISwapChain> swap_chain;
 
     inline static Logger logger = Logger("Diligent");
     static void diligent_log(diligent::DEBUG_MESSAGE_SEVERITY severity, const char* message, const char* function, const char* file, int line) {
