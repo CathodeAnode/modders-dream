@@ -159,7 +159,9 @@ public:
         }
     }
 
-    ~Context() = default;
+    ~Context() {
+        device_context->WaitForIdle();
+    }
 
 private:
     diligent::RefCntAutoPtr<diligent::IRenderDevice> device;
