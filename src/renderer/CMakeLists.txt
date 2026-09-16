@@ -5,8 +5,8 @@ set(SOURCES
 
 set(MODULES
     ${MODULES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/diligent.cppm
-    ${CMAKE_CURRENT_SOURCE_DIR}/color.cppm
-    ${CMAKE_CURRENT_SOURCE_DIR}/context.cppm
+    ${CMAKE_CURRENT_SOURCE_DIR}/Diligent.cppm
+    ${CMAKE_CURRENT_SOURCE_DIR}/Color.cppm
+    ${CMAKE_CURRENT_SOURCE_DIR}/Context.cppm
     PARENT_SCOPE
 )

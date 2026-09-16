@@ -1,8 +1,8 @@
-export module md.error;
+export module ModdersDream.Error;
 
 import std;
 
-export namespace md {
+export namespace ModdersDream {
 
 enum class ErrorCode : std::uint32_t {
     None = 0,
@@ -20,20 +20,20 @@ struct Error {
 
 class ErrorHandler {
 public:
-    bool has_error() const {
+    bool HasError() const {
         return error_.has_value();
     }
 
-    const Error& get_error() const {
+    const Error& GetError() const {
         return *error_;
     }
 
-    void reset_error() {
+    void ResetError() {
         error_.reset();
     }
 
 protected:
-    void submit_error(Error error) {
+    void SubmitError(Error error) {
         this->error_ = std::move(error);
     }
 
@@ -41,4 +41,4 @@ private:
     std::optional<Error> error_ = std::nullopt;
 };
 
-} // namespace md
+} // namespace ModdersDream

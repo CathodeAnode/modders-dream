@@ -1,13 +1,13 @@
-export module md.logger;
+export module ModdersDream.Logger;
 
-import md.error;
+import ModdersDream.Error;
 
 import std;
 
-export namespace md {
+export namespace ModdersDream {
 
 // TODO: Make argc/argv parser so that logger can have disableable levels of logging
-// TODO: Add way to log into a file
+// TODO: Add way to Log into a file
 
 namespace LogLevel {
 
@@ -27,16 +27,16 @@ public:
     Logger(const std::string category) : category(std::move(category)) {}
 
     template <typename... Args>
-    inline void log(std::string_view log_level, std::format_string<Args...> format, Args&&... args) {
+    inline void Log(std::string_view logLevel, std::format_string<Args...> format, Args&&... args) {
         std::println(
             "[{}] {}: {}",
-            log_level,
+            logLevel,
             this->category,
             std::format(format, std::forward<Args>(args)...)
         );
     }
 
-    inline static void log(md::Error error) {
+    inline static void Log(ModdersDream::Error error) {
         std::println(
             "[{}] {}: {}: {}",
             LogLevel::Error,
@@ -47,4 +47,4 @@ public:
     }
 };
 
-} // namespace md
+} // namespace ModdersDream

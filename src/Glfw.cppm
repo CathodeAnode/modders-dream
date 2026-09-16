@@ -20,22 +20,22 @@ module;
     #undef False
 #endif
 
-export module md.glfw;
+export module ModdersDream.Glfw;
 
-import md.logger;
-import md.error;
-import md.zstring_view;
-import md.math;
+import ModdersDream.Logger;
+import ModdersDream.Error;
+import ModdersDream.ZStringView;
+import ModdersDream.Math;
 
 import std;
 
 namespace {
 
-md::Logger logger("GLFW");
+ModdersDream::Logger logger("GLFW");
 
 } // namespace
 
-export namespace md::glfw {
+export namespace ModdersDream::Glfw {
 
 enum class Key : int {
     Space = GLFW_KEY_SPACE,
@@ -187,11 +187,11 @@ enum class MouseButton {
 };
 
 struct WindowPosEvent {
-    math::Vector2i position;
+    Math::Vector2i position;
 };
 
 struct WindowSizeEvent {
-    math::Vector2i size;
+    Math::Vector2i size;
 };
 
 struct WindowCloseEvent {};
@@ -211,11 +211,11 @@ struct WindowMaximizeEvent {
 };
 
 struct FramebufferSizeEvent {
-    math::Vector2i size;
+    Math::Vector2i size;
 };
 
 struct WindowContentScaleEvent {
-    math::Vector2f scale;
+    Math::Vector2f scale;
 };
 
 struct KeyEvent {
@@ -225,7 +225,7 @@ struct KeyEvent {
 };
 
 struct CharEvent {
-    unsigned int codepoint;
+    unsigned int codePoint;
 };
 
 struct MouseButtonEvent {
@@ -234,11 +234,11 @@ struct MouseButtonEvent {
 };
 
 struct MousePosEvent {
-    math::Vector2d position;
+    Math::Vector2d position;
 };
 
 struct MouseScrollEvent {
-    math::Vector2d offset;
+    Math::Vector2d offset;
 };
 
 struct DropEvent {
@@ -283,32 +283,32 @@ enum class WindowHint : unsigned int {
     RedBits = GLFW_RED_BITS,
     GreenBits = GLFW_GREEN_BITS,
     BlueBits = GLFW_BLUE_BITS,
-    AlphaBitsGLFW_ALPHA_BITS,
+    AlphaBits,
     DepthBits = GLFW_DEPTH_BITS,
     StencilBits = GLFW_STENCIL_BITS,
     AccumRedBits = GLFW_ACCUM_RED_BITS,
     AccumGreenBits = GLFW_ACCUM_GREEN_BITS,
-    ACcumBlueBits = GLFW_ACCUM_BLUE_BITS,
+    AccumBlueBits = GLFW_ACCUM_BLUE_BITS,
     AccumAlphaBits = GLFW_ACCUM_ALPHA_BITS,
     AuxBuffers = GLFW_AUX_BUFFERS,
     Stereo = GLFW_STEREO,
     Samples = GLFW_SAMPLES,
-    SRGBCapable = GLFW_SRGB_CAPABLE,
+    SrgbCapable = GLFW_SRGB_CAPABLE,
     DoubleBuffer = GLFW_DOUBLEBUFFER,
     RefreshRate = GLFW_REFRESH_RATE,
-    ClientAPI = GLFW_CLIENT_API,
-    ContextCreationAPI = GLFW_CONTEXT_CREATION_API,
+    ClientApi = GLFW_CLIENT_API,
+    ContextCreationApi = GLFW_CONTEXT_CREATION_API,
     ContextVersionMajor = GLFW_CONTEXT_VERSION_MAJOR,
     ContextVersionMinor = GLFW_CONTEXT_VERSION_MINOR,
     ContextRobustness = GLFW_CONTEXT_ROBUSTNESS,
     ContextReleaseBehaviour = GLFW_CONTEXT_RELEASE_BEHAVIOR,
     ContextNoError = GLFW_CONTEXT_NO_ERROR,
-    OpenGLForwardCompatibility = GLFW_OPENGL_FORWARD_COMPAT,
-    OpenGLDebugContext = GLFW_OPENGL_DEBUG_CONTEXT,
-    OpenGLProfile = GLFW_OPENGL_PROFILE,
+    OpenGlForwardCompatibility = GLFW_OPENGL_FORWARD_COMPAT,
+    OpenGlDebugContext = GLFW_OPENGL_DEBUG_CONTEXT,
+    OpenGlProfile = GLFW_OPENGL_PROFILE,
     CocoaRetinaFramebuffer = GLFW_COCOA_RETINA_FRAMEBUFFER,
     CocoaGraphicsSwitching = GLFW_COCOA_GRAPHICS_SWITCHING,
-    X11XCBVulkanSurface = GLFW_X11_XCB_VULKAN_SURFACE,
+    X11XcbVulkanSurface = GLFW_X11_XCB_VULKAN_SURFACE,
     Win32KeyboardMenu = GLFW_WIN32_KEYBOARD_MENU,
     WaylandLibdecor = GLFW_WAYLAND_LIBDECOR,
     AnyPosition = GLFW_ANY_POSITION
@@ -317,21 +317,21 @@ enum class WindowHint : unsigned int {
 enum class WindowHintValue : unsigned int {
     True = GLFW_TRUE,
     False = GLFW_FALSE,
-    OpenGLAPI = GLFW_OPENGL_API,
-    OpenGLESAPI = GLFW_OPENGL_ES_API,
-    NoAPI = GLFW_NO_API,
-    NativeContextAPI = GLFW_NATIVE_CONTEXT_API,
-    EGLContextAPI = GLFW_EGL_CONTEXT_API,
-    OmesaContextAPI = GLFW_OSMESA_CONTEXT_API,
+    OpenGlApi = GLFW_OPENGL_API,
+    OpenGlEsApi = GLFW_OPENGL_ES_API,
+    NoApi = GLFW_NO_API,
+    NativeContextApi = GLFW_NATIVE_CONTEXT_API,
+    EglContextApi = GLFW_EGL_CONTEXT_API,
+    OmesaContextApi = GLFW_OSMESA_CONTEXT_API,
     NoRobustness = GLFW_NO_ROBUSTNESS,
     NoResetNotifiaction = GLFW_NO_RESET_NOTIFICATION,
     LoseContextOnReset = GLFW_LOSE_CONTEXT_ON_RESET,
     AnyReleaseBehaviour = GLFW_ANY_RELEASE_BEHAVIOR,
     ReleaseBehaviourFlush = GLFW_RELEASE_BEHAVIOR_FLUSH,
     ReleaseBehaviourNone = GLFW_RELEASE_BEHAVIOR_NONE,
-    OpenGLAnyProfile = GLFW_OPENGL_ANY_PROFILE,
-    OpenGLCoreProfile = GLFW_OPENGL_CORE_PROFILE,
-    OpenGLCompatibilityProfile = GLFW_OPENGL_COMPAT_PROFILE,
+    OpenGlAnyProfile = GLFW_OPENGL_ANY_PROFILE,
+    OpenGlCoreProfile = GLFW_OPENGL_CORE_PROFILE,
+    OpenGlCompatibilityProfile = GLFW_OPENGL_COMPAT_PROFILE,
     AnyPosition = GLFW_ANY_POSITION,
     WaylandPreferLibdecor = GLFW_WAYLAND_PREFER_LIBDECOR,
     WaylandDisableLibdecor = GLFW_WAYLAND_DISABLE_LIBDECOR
@@ -348,27 +348,27 @@ enum class Platform : int {
 
 using VideoMode = GLFWvidmode;
 
-inline constexpr auto poll_events = glfwPollEvents;
+inline constexpr auto PollEvents = glfwPollEvents;
 
-inline constexpr void window_hint(WindowHint hint, WindowHintValue value) {
+inline constexpr void SetWindowHint(WindowHint hint, WindowHintValue value) {
     glfwWindowHint(static_cast<int>(hint), static_cast<int>(value));
 }
 
-inline constexpr void window_hint(WindowHint hint, int value) {
+inline constexpr void SetWindowHint(WindowHint hint, int value) {
     glfwWindowHint(static_cast<int>(hint), value);
 }
 
-inline constexpr void window_hint(int hint, int value) {
+inline constexpr void SetWindowHint(int hint, int value) {
     glfwWindowHint(hint, value);
 }
 
-inline constexpr Platform get_platform() noexcept {
+inline constexpr Platform GetPlatform() noexcept {
     return static_cast<Platform>(glfwGetPlatform());
 }
 
-void* get_display() noexcept {
+void* GetDisplay() noexcept {
 #ifdef __linux__
-    switch (get_platform()) {
+    switch (GetPlatform()) {
         case Platform::Wayland:
             return glfwGetWaylandDisplay();
         case Platform::X11:
@@ -382,119 +382,119 @@ void* get_display() noexcept {
 
 class Monitor {
 public:
-    md::zstring_view get_name() {
-        return glfwGetMonitorName(this->monitor);
+    ModdersDream::ZStringView GetName() {
+        return glfwGetMonitorName(this->monitor_);
     }
 
-    inline math::Vector2i get_position() {
-        math::Vector2i position;
-        glfwGetMonitorPos(this->monitor, &position.x(), &position.y());
+    inline Math::Vector2i GetPosition() {
+        Math::Vector2i position;
+        glfwGetMonitorPos(this->monitor_, &position.x(), &position.y());
         return position;
     }
 
-    inline void get_work_area(math::Vector2i& position, math::Vector2i& size) {
-        math::Vector2i position_;
-        math::Vector2i size_;
-        glfwGetMonitorWorkarea(this->monitor, &position_.x(), &position_.y(), &size_.x(), &size_.y());
+    inline void GetWorkArea(Math::Vector2i& position, Math::Vector2i& size) {
+        Math::Vector2i workPosition;
+        Math::Vector2i workSize;
+        glfwGetMonitorWorkarea(this->monitor_, &workPosition.x(), &workPosition.y(), &workSize.x(), &workSize.y());
     }
 
-    inline math::Vector2i get_physical_sizeMM() {
-        math::Vector2i sizeMM;
-        glfwGetMonitorPhysicalSize(this->monitor, &sizeMM.x(), &sizeMM.y());
-        return sizeMM;
+    inline Math::Vector2i GetPhysicalSizeMm() {
+        Math::Vector2i sizeMm;
+        glfwGetMonitorPhysicalSize(this->monitor_, &sizeMm.x(), &sizeMm.y());
+        return sizeMm;
     }
 
-    inline math::Vector2f get_content_scale() {
-        math::Vector2f scale;
-        glfwGetMonitorContentScale(this->monitor, &scale.x(), &scale.y());
+    inline Math::Vector2f GetContentScale() {
+        Math::Vector2f scale;
+        glfwGetMonitorContentScale(this->monitor_, &scale.x(), &scale.y());
         return scale;
     }
 
-    inline const VideoMode* get_video_mode() {
-        return glfwGetVideoMode(this->monitor);
+    inline const VideoMode* GetVideoMode() {
+        return glfwGetVideoMode(this->monitor_);
     }
 
-    inline const VideoMode* get_video_modes(int* count) {
-        return glfwGetVideoModes(this->monitor, count);
+    inline const VideoMode* GetVideoModes(int* count) {
+        return glfwGetVideoModes(this->monitor_, count);
     }
 
-    inline GLFWmonitor* get_native_handle() {
-        return monitor;
+    inline GLFWmonitor* GetNativeHandle() {
+        return monitor_;
     }
 
 private:
-    GLFWmonitor* monitor;
+    GLFWmonitor* monitor_;
 };
 
 struct EventConfig {
-    bool enable_general_events = true;
-    bool enable_key_events = true;
-    bool enable_char_events = true;
-    bool enable_mouse_events = true;
+    bool enableGeneralEvents = true;
+    bool enableKeyEvents = true;
+    bool enableCharEvents = true;
+    bool enableMouseEvents = true;
 };
 
 // Forward decleration for Window & Context classes
-namespace callback {
+namespace Callback {
 
-void initialize_error();
-void initialize_global();
-void initialize_window(GLFWwindow* window);
+void InitializeError();
+void InitializeGlobal();
+void InitializeWindow(GLFWwindow* window);
 
-} // namespace callback
+} // namespace Callback
 
-class Window : public md::ErrorHandler {
+class Window : public ModdersDream::ErrorHandler {
 public:
-    inline Window(math::Vector2i size, md::zstring_view title) {
-        this->window = glfwCreateWindow(size.x(), size.y(), title, nullptr, nullptr);
+    inline Window(Math::Vector2i size, ModdersDream::ZStringView title) {
+        this->window_ = glfwCreateWindow(size.x(), size.y(), title, nullptr, nullptr);
 
-        if (!this->window) {
-            md::Error error{
+        if (!this->window_) {
+            ModdersDream::Error error{
                 .system = "glfw::Window",
                 .operation = "glfwCreateWindow",
                 .description = "Failed to initialize window",
-                .code = md::ErrorCode::InitializationFailed
+                .code = ModdersDream::ErrorCode::InitializationFailed
             };
-            submit_error(error);
+            SubmitError(error);
             return;
         }
 
-        this->windows[window] = this;
-        callback::initialize_window(this->window);
+        this->windows_[window_] = this;
+        Callback::InitializeWindow(this->window_);
     }
 
-    inline Window(math::Vector2i size, md::zstring_view title, Monitor monitor) {
-        this->window = glfwCreateWindow(size.x(), size.y(), title, monitor.get_native_handle(), nullptr);
+    inline Window(Math::Vector2i size, ModdersDream::ZStringView title, Monitor monitor) {
+        this->window_ = glfwCreateWindow(size.x(), size.y(), title, monitor.GetNativeHandle(), nullptr);
 
-        if (!this->window) {
-            md::Error error{
+        if (!this->window_) {
+            ModdersDream::Error error{
                 .system = "glfw::Window",
                 .operation = "glfwCreateWindow",
                 .description = "Failed to initialize window",
-                .code = md::ErrorCode::InitializationFailed
+                .code = ModdersDream::ErrorCode::InitializationFailed
             };
-            submit_error(error);
+            SubmitError(error);
             return;
         }
 
-        this->windows[window] = this;
-        callback::initialize_window(this->window);
+        this->windows_[window_] = this;
+        Callback::InitializeWindow(this->window_);
     }
 
     inline ~Window() {
-        glfwDestroyWindow(this->window);
+        glfwDestroyWindow(this->window_);
     }
 
-    void* get_window() noexcept {
+    void* GetWindow() noexcept {
 #ifdef _WIN32
-        return glfwGetWin32Window(this->window);
+        return glfwGetWin32Window(this->window_);
 #elifdef __APPLE__
-        return glfwGetCocoaView(this->window);
+        return glfwGetCocoaView(this->window_);
 #elifdef __linux__
-        switch (get_platform()) {
+        switch (GetPlatform()) {
             case Platform::Wayland:
-                return glfwGetWaylandWindow(this->window);
+                return glfwGetWaylandWindow(this->window_);
             case Platform::X11:
-                return reinterpret_cast<void*>(static_cast<std::uintptr_t>(glfwGetX11Window(this->window)));
+                return reinterpret_cast<void*>(static_cast<std::uintptr_t>(glfwGetX11Window(this->window_)));
             default:
                 return nullptr;
         }
@@ -502,89 +502,89 @@ public:
         return nullptr;
     }
 
-    inline math::Vector2i get_framebuffer_size() {
-        math::Vector2i size;
-        glfwGetFramebufferSize(this->window, &size.x(), &size.y());
+    inline Math::Vector2i GetFramebufferSize() {
+        Math::Vector2i size;
+        glfwGetFramebufferSize(this->window_, &size.x(), &size.y());
         return size;
     }
 
-    inline bool should_close() const {
-        return glfwWindowShouldClose(this->window);
+    inline bool ShouldClose() const {
+        return glfwWindowShouldClose(this->window_);
     }
 
-    inline const GLFWwindow* get_handle() const {
-        return this->window;
+    inline const GLFWwindow* GetHandle() const {
+        return this->window_;
     }
 
-    inline static Window* get_registered_window(GLFWwindow* handle) {
-        return windows[handle];
+    inline static Window* GetRegisteredWindow(GLFWwindow* handle) {
+        return windows_[handle];
     }
 
-    inline const std::vector<Event>& general_events() {
-        return general_events_;
+    inline const std::vector<Event>& GeneralEvents() {
+        return generalEvents_;
     }
 
-    inline const std::vector<KeyEvent>& key_events() {
-        return key_events_;
+    inline const std::vector<KeyEvent>& KeyEvents() {
+        return keyEvents_;
     }
 
-    inline const std::vector<CharEvent>& char_events() {
-        return char_events_;
+    inline const std::vector<CharEvent>& CharEvents() {
+        return charEvents_;
     }
 
-    inline const std::vector<MouseEvent>& mouse_events() {
-        return mouse_events_;
+    inline const std::vector<MouseEvent>& MouseEvents() {
+        return mouseEvents_;
     }
 
-    inline void add_general_event(Event& event) {
-        general_events_.push_back(event);
+    inline void AddGeneralEvent(Event& event) {
+        generalEvents_.push_back(event);
     }
 
-    inline void add_key_event(KeyEvent& event) {
-        key_events_.push_back(event);
+    inline void AddKeyEvent(KeyEvent& event) {
+        keyEvents_.push_back(event);
     }
 
-    inline void add_char_event(CharEvent& event) {
-        char_events_.push_back(event);
+    inline void AddCharEvent(CharEvent& event) {
+        charEvents_.push_back(event);
     }
 
-    inline void add_mouse_event(MouseEvent& event) {
-        mouse_events_.push_back(event);
+    inline void AddMouseEvent(MouseEvent& event) {
+        mouseEvents_.push_back(event);
     }
 
-    void clear_events() {
-        general_events_.clear();
-        key_events_.clear();
-        char_events_.clear();
-        mouse_events_.clear();
+    void ClearEvents() {
+        generalEvents_.clear();
+        keyEvents_.clear();
+        charEvents_.clear();
+        mouseEvents_.clear();
     }
 
 private:
-    GLFWwindow* window;
+    GLFWwindow* window_;
 
-    std::vector<Event> general_events_;
-    std::vector<KeyEvent> key_events_;
-    std::vector<CharEvent> char_events_;
-    std::vector<MouseEvent> mouse_events_;
+    std::vector<Event> generalEvents_;
+    std::vector<KeyEvent> keyEvents_;
+    std::vector<CharEvent> charEvents_;
+    std::vector<MouseEvent> mouseEvents_;
 
-    inline static std::unordered_map<GLFWwindow*, Window*> windows;
+    inline static std::unordered_map<GLFWwindow*, Window*> windows_;
 };
 
-class Context : public md::ErrorHandler {
+class Context : public ModdersDream::ErrorHandler {
 public:
     Context() {
-        callback::initialize_error();
+        Callback::InitializeError();
         if (!glfwInit()) {
             Error error = {
                 .system = "glfw::Context",
                 .operation = "glfwInit",
                 .description = "Failed to initialize GLFW",
-                .code = md::ErrorCode::InitializationFailed
+                .code = ModdersDream::ErrorCode::InitializationFailed
             };
-            ErrorHandler::submit_error(error);
+            ErrorHandler::SubmitError(error);
             return;
         }
-        callback::initialize_global();
+        Callback::InitializeGlobal();
     }
 
     ~Context() {
@@ -592,109 +592,109 @@ public:
     }
 };
 
-std::vector<Event> global_events;
+std::vector<Event> globalEvents;
 
-namespace callback {
+namespace Callback {
 
-inline void add_global_event(Event& event) {
-    global_events.push_back(event);
+inline void AddGlobalEvent(Event& event) {
+    globalEvents.push_back(event);
 };
 
-inline void add_general_event(GLFWwindow* window, Event& event) {
-    Window::get_registered_window(window)->add_general_event(event);
+inline void AddGeneralEvent(GLFWwindow* window, Event& event) {
+    Window::GetRegisteredWindow(window)->AddGeneralEvent(event);
 }
 
-inline void add_key_event(GLFWwindow* window, KeyEvent& event) {
-    Window::get_registered_window(window)->add_key_event(event);
+inline void AddKeyEvent(GLFWwindow* window, KeyEvent& event) {
+    Window::GetRegisteredWindow(window)->AddKeyEvent(event);
 }
 
-inline void add_char_event(GLFWwindow* window, CharEvent& event) {
-    Window::get_registered_window(window)->add_char_event(event);
+inline void AddCharEvent(GLFWwindow* window, CharEvent& event) {
+    Window::GetRegisteredWindow(window)->AddCharEvent(event);
 }
 
-inline void add_mouse_event(GLFWwindow* window, MouseEvent& event) {
-    Window::get_registered_window(window)->add_mouse_event(event);
+inline void AddMouseEvent(GLFWwindow* window, MouseEvent& event) {
+    Window::GetRegisteredWindow(window)->AddMouseEvent(event);
 }
 
 //
 // Window callbacks
 //
 
-void window_pos(GLFWwindow* window, int xpos, int ypos) {
-    Event event = WindowPosEvent({xpos, ypos});
-    add_general_event(window, event);
+void WindowPos(GLFWwindow* window, int xPos, int yPos) {
+    Event event = WindowPosEvent({xPos, yPos});
+    AddGeneralEvent(window, event);
 }
 
-void window_size(GLFWwindow* window, int xsize, int ysize) {
-    Event event = WindowSizeEvent({xsize, ysize});
-    add_general_event(window, event);
+void WindowSize(GLFWwindow* window, int xSize, int ySize) {
+    Event event = WindowSizeEvent({xSize, ySize});
+    AddGeneralEvent(window, event);
 }
 
-void window_close(GLFWwindow* window) {
+void WindowClose(GLFWwindow* window) {
     Event event = WindowCloseEvent();
-    add_general_event(window, event);
+    AddGeneralEvent(window, event);
 }
 
-void window_refresh(GLFWwindow* window) {
+void WindowRefresh(GLFWwindow* window) {
     Event event = WindowRefreshEvent();
-    add_general_event(window, event);
+    AddGeneralEvent(window, event);
 }
 
-void window_focus(GLFWwindow* window, int focused) {
+void WindowFocus(GLFWwindow* window, int focused) {
     Event event = WindowFocusEvent(focused);
-    add_general_event(window, event);
+    AddGeneralEvent(window, event);
 }
 
-void window_iconify(GLFWwindow* window, int iconified) {
+void WindowIconify(GLFWwindow* window, int iconified) {
     Event event = WindowIconifyEvent(iconified);
-    add_general_event(window, event);
+    AddGeneralEvent(window, event);
 }
 
-void window_maximize(GLFWwindow* window, int maximized) {
+void WindowMaximize(GLFWwindow* window, int maximized) {
     Event event = WindowMaximizeEvent(maximized);
-    add_general_event(window, event);
+    AddGeneralEvent(window, event);
 }
 
-void framebuffer_size(GLFWwindow* window, int xsize, int ysize) {
-    Event event = FramebufferSizeEvent({xsize, ysize});
-    add_general_event(window, event);
+void FramebufferSize(GLFWwindow* window, int xSize, int ySize) {
+    Event event = FramebufferSizeEvent({xSize, ySize});
+    AddGeneralEvent(window, event);
 }
 
-void window_content_scale(GLFWwindow* window, float xscale, float yscale) {
-    Event event = WindowContentScaleEvent({xscale, yscale});
-    add_general_event(window, event);
+void WindowContentScale(GLFWwindow* window, float xScale, float yScale) {
+    Event event = WindowContentScaleEvent({xScale, yScale});
+    AddGeneralEvent(window, event);
 }
 
 //
 // Input callbacks
 //
 
-void key(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void KeyCallback(GLFWwindow* window, int key, int scanCode, int action, int mods) {
     KeyEvent event(static_cast<Key>(key), static_cast<Action>(action), static_cast<KeyModifier>(mods));
-    add_key_event(window, event);
+    AddKeyEvent(window, event);
 }
 
-void character(GLFWwindow* window, unsigned int codepoint) {
-    CharEvent event(codepoint);
-    add_char_event(window, event);
+void Character(GLFWwindow* window, unsigned int codePoint) {
+    CharEvent event(codePoint);
+    AddCharEvent(window, event);
 }
 
-void mouse_button(GLFWwindow* window, int button, int action, int mods) {
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
     MouseEvent event = MouseButtonEvent(static_cast<MouseButton>(button), static_cast<Action>(action));
-    add_mouse_event(window, event);
+    AddMouseEvent(window, event);
 }
 
-void cursor_pos(GLFWwindow* window, double xpos, double ypos) {
-    MouseEvent event = MousePosEvent({xpos, ypos});
-    add_mouse_event(window, event);
+void CursorPos(GLFWwindow* window, double xPos, double yPos) {
+    MouseEvent event = MousePosEvent({xPos, yPos});
+    AddMouseEvent(window, event);
 }
 
-void scroll(GLFWwindow* window, double xoffset, double yoffset) {
-    MouseEvent event = MouseScrollEvent({xoffset, yoffset});
-    add_mouse_event(window, event);
+void Scroll(GLFWwindow* window, double xOffset, double yOffset) {
+    MouseEvent event = MouseScrollEvent({xOffset, yOffset});
+    AddMouseEvent(window, event);
 }
 
-void drop(GLFWwindow* window, int count, const char** paths) {
+void Drop(GLFWwindow* window, int count, const char** paths) {
     DropEvent drop;
 
     for (int i = 0; i < count; ++i) {
@@ -702,54 +702,54 @@ void drop(GLFWwindow* window, int count, const char** paths) {
     }
 
     Event event = drop;
-    add_general_event(window, event);
+    AddGeneralEvent(window, event);
 }
 
-// TODO: Joystick and monitor events & handle global_events vector
-void joystick(int jid, int event) {
+// TODO: Joystick and monitor events & handle globalEvents vector
+void Joystick(int jid, int event) {
 }
 
-void monitor(GLFWmonitor* monitor, int event) {
+void Monitor(GLFWmonitor* monitor, int event) {
 }
 
-void error(int error_code, const char* description) {
-    logger.log(md::LogLevel::Error, "{}: {}", error_code, description);
-}
-
-// Context class calls it automatically
-// Nothing would (probably) happen if you call it twice
-void initialize_error() {
-    glfwSetErrorCallback(error);
+void ErrorCallback(int errorCode, const char* description) {
+    logger.Log(ModdersDream::LogLevel::Error, "{}: {}", errorCode, description);
 }
 
 // Context class calls it automatically
 // Nothing would (probably) happen if you call it twice
-void initialize_global() {
-    glfwSetJoystickCallback(joystick);
-    glfwSetMonitorCallback(monitor);
+void InitializeError() {
+    glfwSetErrorCallback(ErrorCallback);
+}
+
+// Context class calls it automatically
+// Nothing would (probably) happen if you call it twice
+void InitializeGlobal() {
+    glfwSetJoystickCallback(Joystick);
+    glfwSetMonitorCallback(Monitor);
 }
 
 // Window class calls it automatically
 // Nothing would (probably) happen if you call it twice
-void initialize_window(GLFWwindow* window) {
-    glfwSetWindowPosCallback(window, window_pos);
-    glfwSetWindowSizeCallback(window, window_size);
-    glfwSetWindowCloseCallback(window, window_close);
-    glfwSetWindowRefreshCallback(window, window_refresh);
-    glfwSetWindowFocusCallback(window, window_focus);
-    glfwSetWindowIconifyCallback(window, window_iconify);
-    glfwSetWindowMaximizeCallback(window, window_maximize);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size);
-    glfwSetWindowContentScaleCallback(window, window_content_scale);
+void InitializeWindow(GLFWwindow* window) {
+    glfwSetWindowPosCallback(window, WindowPos);
+    glfwSetWindowSizeCallback(window, WindowSize);
+    glfwSetWindowCloseCallback(window, WindowClose);
+    glfwSetWindowRefreshCallback(window, WindowRefresh);
+    glfwSetWindowFocusCallback(window, WindowFocus);
+    glfwSetWindowIconifyCallback(window, WindowIconify);
+    glfwSetWindowMaximizeCallback(window, WindowMaximize);
+    glfwSetFramebufferSizeCallback(window, FramebufferSize);
+    glfwSetWindowContentScaleCallback(window, WindowContentScale);
 
-    glfwSetKeyCallback(window, key);
-    glfwSetCharCallback(window, character);
-    glfwSetMouseButtonCallback(window, mouse_button);
-    glfwSetCursorPosCallback(window, cursor_pos);
-    glfwSetScrollCallback(window, scroll);
-    glfwSetDropCallback(window, drop);
+    glfwSetKeyCallback(window, KeyCallback);
+    glfwSetCharCallback(window, Character);
+    glfwSetMouseButtonCallback(window, MouseButtonCallback);
+    glfwSetCursorPosCallback(window, CursorPos);
+    glfwSetScrollCallback(window, Scroll);
+    glfwSetDropCallback(window, Drop);
 }
 
-} // namespace callback
+} // namespace Callback
 
-} // namespace md::glfw
+} // namespace ModdersDream::Glfw

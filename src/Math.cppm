@@ -1,8 +1,8 @@
 module;
 #include <Eigen/Dense>
-export module md.math;
+export module ModdersDream.Math;
 
-export namespace md::math {
+export namespace ModdersDream::Math {
 
 template <typename Type, int Size>
 using Vector = Eigen::Vector<Type, Size>;
@@ -47,4 +47,4 @@ using Matrix4d = Eigen::Matrix4d;
 using Quaternionf = Eigen::Quaternionf;
 using Quaterniond = Eigen::Quaterniond;
 
-} // namespace md::math
+} // namespace ModdersDream::Math
