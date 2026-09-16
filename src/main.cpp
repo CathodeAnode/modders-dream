@@ -1,6 +1,7 @@
 import md.logger;
 import md.glfw;
 import md.renderer.diligent;
+import md.math;
 
 import std;
 
@@ -17,7 +18,7 @@ int main() {
 
     glfw::window_hint(glfw::WindowHint::ClientAPI, glfw::WindowHintValue::NoAPI);
 
-    glfw::Window window(800, 800, "Modder's Dream");
+    glfw::Window window({800, 800}, "Modder's Dream");
 
     if (window.has_error()) {
         Logger::log(window.get_error());
@@ -63,13 +64,11 @@ int main() {
         return 1;
     }
 
-    int width = 0;
-    int height = 0;
-    window.get_framebuffer_size(&width, &height);
+    math::Vector2i size = window.get_framebuffer_size();
 
     dg::SwapChainDesc swap_chain_desc;
-    swap_chain_desc.Width = static_cast<dg::Uint32>(std::max(width, 1));
-    swap_chain_desc.Height = static_cast<dg::Uint32>(std::max(height, 1));
+    swap_chain_desc.Width = static_cast<dg::Uint32>(std::max(size.x(), 1));
+    swap_chain_desc.Height = static_cast<dg::Uint32>(std::max(size.y(), 1));
     swap_chain_desc.DepthBufferFormat = dg::TEXTURE_FORMAT::TEX_FORMAT_UNKNOWN;
 
     dg::RefCntAutoPtr<dg::ISwapChain> swap_chain;
@@ -94,16 +93,16 @@ int main() {
             break;
         }
 
-        window.get_framebuffer_size(&width, &height);
-        if (width <= 0 || height <= 0) {
+        math::Vector2i size = window.get_framebuffer_size();
+        if (size.x() <= 0 || size.y() <= 0) {
             std::this_thread::sleep_for(std::chrono::milliseconds(16));
             continue;
         }
 
         const auto& desc = swap_chain->GetDesc();
-        if (desc.Width != static_cast<dg::Uint32>(width) ||
-            desc.Height != static_cast<dg::Uint32>(height)) {
-            swap_chain->Resize(static_cast<dg::Uint32>(width), static_cast<dg::Uint32>(height));
+        if (desc.Width != static_cast<dg::Uint32>(size.x()) ||
+            desc.Height != static_cast<dg::Uint32>(size.y())) {
+            swap_chain->Resize(static_cast<dg::Uint32>(size.x()), static_cast<dg::Uint32>(size.y()));
         }
 
         auto* render_target = swap_chain->GetCurrentBackBufferRTV();

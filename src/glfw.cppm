@@ -25,6 +25,7 @@ export module md.glfw;
 import md.logger;
 import md.error;
 import md.zstring_view;
+import md.math;
 
 import std;
 
@@ -186,11 +187,11 @@ enum class MouseButton {
 };
 
 struct WindowPosEvent {
-    int x, y;
+    math::Vector2i position;
 };
 
 struct WindowSizeEvent {
-    int x, y;
+    math::Vector2i size;
 };
 
 struct WindowCloseEvent {};
@@ -210,11 +211,11 @@ struct WindowMaximizeEvent {
 };
 
 struct FramebufferSizeEvent {
-    int x, y;
+    math::Vector2i size;
 };
 
 struct WindowContentScaleEvent {
-    float x, y;
+    math::Vector2f scale;
 };
 
 struct KeyEvent {
@@ -233,11 +234,11 @@ struct MouseButtonEvent {
 };
 
 struct MousePosEvent {
-    double x, y;
+    math::Vector2d position;
 };
 
 struct MouseScrollEvent {
-    double xoffset, yoffset;
+    math::Vector2d offset;
 };
 
 struct DropEvent {
@@ -385,20 +386,28 @@ public:
         return glfwGetMonitorName(this->monitor);
     }
 
-    inline void get_position(int* xpos, int* ypos) {
-        glfwGetMonitorPos(this->monitor, xpos, ypos);
+    inline math::Vector2i get_position() {
+        math::Vector2i position;
+        glfwGetMonitorPos(this->monitor, &position.x(), &position.y());
+        return position;
     }
 
-    inline void get_work_area(int* xpos, int* ypos, int* width, int* height) {
-        glfwGetMonitorWorkarea(this->monitor, xpos, ypos, width, height);
+    inline void get_work_area(math::Vector2i& position, math::Vector2i& size) {
+        math::Vector2i position_;
+        math::Vector2i size_;
+        glfwGetMonitorWorkarea(this->monitor, &position_.x(), &position_.y(), &size_.x(), &size_.y());
     }
 
-    inline void get_physical_size(int* widthMM, int* heightMM) {
-        glfwGetMonitorPhysicalSize(this->monitor, widthMM, heightMM);
+    inline math::Vector2i get_physical_sizeMM() {
+        math::Vector2i sizeMM;
+        glfwGetMonitorPhysicalSize(this->monitor, &sizeMM.x(), &sizeMM.y());
+        return sizeMM;
     }
 
-    inline void get_content_scale(float* xscale, float* yscale) {
-        glfwGetMonitorContentScale(this->monitor, xscale, yscale);
+    inline math::Vector2f get_content_scale() {
+        math::Vector2f scale;
+        glfwGetMonitorContentScale(this->monitor, &scale.x(), &scale.y());
+        return scale;
     }
 
     inline const VideoMode* get_video_mode() {
@@ -435,8 +444,8 @@ void initialize_window(GLFWwindow* window);
 
 class Window : public md::ErrorHandler {
 public:
-    inline Window(int width, int height, md::zstring_view title) {
-        this->window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+    inline Window(math::Vector2i size, md::zstring_view title) {
+        this->window = glfwCreateWindow(size.x(), size.y(), title, nullptr, nullptr);
 
         if (!this->window) {
             md::Error error{
@@ -453,8 +462,8 @@ public:
         callback::initialize_window(this->window);
     }
 
-    inline Window(int width, int height, md::zstring_view title, Monitor monitor) {
-        this->window = glfwCreateWindow(width, height, title, monitor.get_native_handle(), nullptr);
+    inline Window(math::Vector2i size, md::zstring_view title, Monitor monitor) {
+        this->window = glfwCreateWindow(size.x(), size.y(), title, monitor.get_native_handle(), nullptr);
 
         if (!this->window) {
             md::Error error{
@@ -493,8 +502,10 @@ public:
         return nullptr;
     }
 
-    inline void get_framebuffer_size(int* width, int* height) {
-        glfwGetFramebufferSize(this->window, width, height);
+    inline math::Vector2i get_framebuffer_size() {
+        math::Vector2i size;
+        glfwGetFramebufferSize(this->window, &size.x(), &size.y());
+        return size;
     }
 
     inline bool should_close() const {
@@ -610,12 +621,12 @@ inline void add_mouse_event(GLFWwindow* window, MouseEvent& event) {
 //
 
 void window_pos(GLFWwindow* window, int xpos, int ypos) {
-    Event event = WindowPosEvent(xpos, ypos);
+    Event event = WindowPosEvent({xpos, ypos});
     add_general_event(window, event);
 }
 
 void window_size(GLFWwindow* window, int xsize, int ysize) {
-    Event event = WindowSizeEvent(xsize, ysize);
+    Event event = WindowSizeEvent({xsize, ysize});
     add_general_event(window, event);
 }
 
@@ -645,12 +656,12 @@ void window_maximize(GLFWwindow* window, int maximized) {
 }
 
 void framebuffer_size(GLFWwindow* window, int xsize, int ysize) {
-    Event event = FramebufferSizeEvent(xsize, ysize);
+    Event event = FramebufferSizeEvent({xsize, ysize});
     add_general_event(window, event);
 }
 
 void window_content_scale(GLFWwindow* window, float xscale, float yscale) {
-    Event event = WindowContentScaleEvent(xscale, yscale);
+    Event event = WindowContentScaleEvent({xscale, yscale});
     add_general_event(window, event);
 }
 
@@ -674,12 +685,12 @@ void mouse_button(GLFWwindow* window, int button, int action, int mods) {
 }
 
 void cursor_pos(GLFWwindow* window, double xpos, double ypos) {
-    MouseEvent event = MousePosEvent(xpos, ypos);
+    MouseEvent event = MousePosEvent({xpos, ypos});
     add_mouse_event(window, event);
 }
 
 void scroll(GLFWwindow* window, double xoffset, double yoffset) {
-    MouseEvent event = MouseScrollEvent(xoffset, yoffset);
+    MouseEvent event = MouseScrollEvent({xoffset, yoffset});
     add_mouse_event(window, event);
 }
 
