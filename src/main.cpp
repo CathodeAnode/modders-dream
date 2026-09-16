@@ -6,7 +6,7 @@ import md.math;
 import std;
 
 using namespace md;
-namespace dg = md::renderer::diligent;
+namespace diligent = md::renderer::diligent;
 
 int main() {
     glfw::Context glfw_context;
@@ -26,12 +26,12 @@ int main() {
     }
 
     Logger renderer_logger("Renderer");
-    dg::NativeWindow native_window;
+    diligent::NativeWindow native_window;
 #if defined(__linux__)
     native_window.pDisplay = glfw::get_display();
     switch (glfw::get_platform()) {
         case glfw::Platform::X11:
-            native_window.WindowId = static_cast<dg::Uint32>(
+            native_window.WindowId = static_cast<diligent::Uint32>(
                 reinterpret_cast<std::uintptr_t>(window.get_window())
             );
             break;
@@ -49,15 +49,15 @@ int main() {
     return 1;
 #endif
 
-    auto* factory = dg::LoadAndGetEngineFactoryVk();
+    auto* factory = diligent::LoadAndGetEngineFactoryVk();
     if (!factory) {
         renderer_logger.log(LogLevel::Fatal, "Failed to load the Vulkan engine");
         return 1;
     }
 
-    dg::RefCntAutoPtr<dg::IRenderDevice> device;
-    dg::RefCntAutoPtr<dg::IDeviceContext> device_context;
-    dg::EngineVkCreateInfo engine_info;
+    diligent::RefCntAutoPtr<diligent::IRenderDevice> device;
+    diligent::RefCntAutoPtr<diligent::IDeviceContext> device_context;
+    diligent::EngineVkCreateInfo engine_info;
     factory->CreateDeviceAndContextsVk(engine_info, &device, &device_context);
     if (!device || !device_context) {
         renderer_logger.log(LogLevel::Fatal, "Failed to create the Vulkan device and context");
@@ -66,12 +66,12 @@ int main() {
 
     math::Vector2i size = window.get_framebuffer_size();
 
-    dg::SwapChainDesc swap_chain_desc;
-    swap_chain_desc.Width = static_cast<dg::Uint32>(std::max(size.x(), 1));
-    swap_chain_desc.Height = static_cast<dg::Uint32>(std::max(size.y(), 1));
-    swap_chain_desc.DepthBufferFormat = dg::TEXTURE_FORMAT::TEX_FORMAT_UNKNOWN;
+    diligent::SwapChainDesc swap_chain_desc;
+    swap_chain_desc.Width = static_cast<diligent::Uint32>(std::max(size.x(), 1));
+    swap_chain_desc.Height = static_cast<diligent::Uint32>(std::max(size.y(), 1));
+    swap_chain_desc.DepthBufferFormat = diligent::TEXTURE_FORMAT::TEX_FORMAT_UNKNOWN;
 
-    dg::RefCntAutoPtr<dg::ISwapChain> swap_chain;
+    diligent::RefCntAutoPtr<diligent::ISwapChain> swap_chain;
     factory->CreateSwapChainVk(device, device_context, swap_chain_desc, native_window, &swap_chain);
     if (!swap_chain) {
         renderer_logger.log(LogLevel::Fatal, "Failed to create the Vulkan swap chain");
@@ -100,9 +100,9 @@ int main() {
         }
 
         const auto& desc = swap_chain->GetDesc();
-        if (desc.Width != static_cast<dg::Uint32>(size.x()) ||
-            desc.Height != static_cast<dg::Uint32>(size.y())) {
-            swap_chain->Resize(static_cast<dg::Uint32>(size.x()), static_cast<dg::Uint32>(size.y()));
+        if (desc.Width != static_cast<diligent::Uint32>(size.x()) ||
+            desc.Height != static_cast<diligent::Uint32>(size.y())) {
+            swap_chain->Resize(static_cast<diligent::Uint32>(size.x()), static_cast<diligent::Uint32>(size.y()));
         }
 
         auto* render_target = swap_chain->GetCurrentBackBufferRTV();
@@ -110,12 +110,12 @@ int main() {
             1,
             &render_target,
             nullptr,
-            dg::RESOURCE_STATE_TRANSITION_MODE::RESOURCE_STATE_TRANSITION_MODE_TRANSITION
+            diligent::RESOURCE_STATE_TRANSITION_MODE::RESOURCE_STATE_TRANSITION_MODE_TRANSITION
         );
         device_context->ClearRenderTarget(
             render_target,
             clear_color,
-            dg::RESOURCE_STATE_TRANSITION_MODE::RESOURCE_STATE_TRANSITION_MODE_TRANSITION
+            diligent::RESOURCE_STATE_TRANSITION_MODE::RESOURCE_STATE_TRANSITION_MODE_TRANSITION
         );
         swap_chain->Present(1);
     }
