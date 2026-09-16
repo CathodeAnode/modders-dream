@@ -7,7 +7,8 @@ export namespace md {
 enum class ErrorCode : std::uint32_t {
     None = 0,
     Error,
-    InitializationFailed
+    InitializationFailed,
+    Unsupported
 };
 
 struct Error {
