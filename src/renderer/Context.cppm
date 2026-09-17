@@ -29,7 +29,7 @@ public:
                 break;
             default:
                 ModdersDream::Error error{
-                    .system = "renderer::Context",
+                    .system = "Renderer::Context",
                     .operation = "get_platform",
                     .description = "Unsupported window platform (only X11 and Wayland are supported)",
                     .code = ModdersDream::ErrorCode::Unsupported
@@ -42,7 +42,7 @@ public:
         Diligent::IEngineFactoryVk* factory = Diligent::LoadAndGetEngineFactoryVk();
         if (!factory) {
             ModdersDream::Error error{
-                .system = "renderer::Context",
+                .system = "Renderer::Context",
                 .operation = "LoadAndGetEngineFactoryVk",
                 .description = "Vulkan factory failed to initialize",
                 .code = ModdersDream::ErrorCode::InitializationFailed
@@ -57,7 +57,7 @@ public:
         factory->CreateDeviceAndContextsVk(engineInfo, &device_, &deviceContext_);
         if (!device_ || !deviceContext_) {
             ModdersDream::Error error{
-                .system = "renderer::Context",
+                .system = "Renderer::Context",
                 .operation = "CreateDeviceAndContextsVk",
                 .description = "Failed to create Vulkan device and context",
                 .code = ModdersDream::ErrorCode::InitializationFailed
@@ -73,7 +73,7 @@ public:
         Diligent::IEngineFactoryD3d12* factory = Diligent::LoadAndGetEngineFactoryD3D12();
         if (!factory) {
             ModdersDream::Error error{
-                .system = "renderer::Context",
+                .system = "Renderer::Context",
                 .operation = "LoadAndGetEngineFactoryD3D12",
                 .description = "Direct3D 12 factory failed to initialize",
                 .code = ModdersDream::ErrorCode::InitializationFailed
@@ -88,7 +88,7 @@ public:
         factory->CreateDeviceAndContextsD3D12(engineInfo, &device_, &deviceContext_);
         if (!device_ || !deviceContext_) {
             ModdersDream::Error error{
-                .system = "renderer::Context",
+                .system = "Renderer::Context",
                 .operation = "CreateDeviceAndContextsD3D12",
                 .description = "Failed to create Direct3D 12 device and context",
                 .code = ModdersDream::ErrorCode::InitializationFailed
@@ -104,7 +104,7 @@ public:
         Diligent::IEngineFactoryMtl* factory = Diligent::GetEngineFactoryMtl();
         if (!factory) {
             ModdersDream::Error error{
-                .system = "renderer::Context",
+                .system = "Renderer::Context",
                 .operation = "GetEngineFactoryMtl",
                 .description = "Metal factory failed to initialize",
                 .code = ModdersDream::ErrorCode::InitializationFailed
@@ -119,7 +119,7 @@ public:
         factory->CreateDeviceAndContextsMtl(engineInfo, &device_, &deviceContext_);
         if (!device_ || !deviceContext_) {
             ModdersDream::Error error{
-                .system = "renderer::Context",
+                .system = "Renderer::Context",
                 .operation = "CreateDeviceAndContextsMtl",
                 .description = "Failed to create Metal device and context",
                 .code = ModdersDream::ErrorCode::InitializationFailed
@@ -129,7 +129,7 @@ public:
         }
 #else
         ModdersDream::Error error{
-            .system = "renderer::Context",
+            .system = "Renderer::Context",
             .operation = "Platform selection",
             .description = "Unsupported platform (only Linux (X11 and Wayland only), Windows and Apple are supported)",
             .code = ModdersDream::ErrorCode::Unsupported

@@ -449,7 +449,7 @@ public:
 
         if (!this->window_) {
             ModdersDream::Error error{
-                .system = "glfw::Window",
+                .system = "Glfw::Window",
                 .operation = "glfwCreateWindow",
                 .description = "Failed to initialize window",
                 .code = ModdersDream::ErrorCode::InitializationFailed
@@ -467,7 +467,7 @@ public:
 
         if (!this->window_) {
             ModdersDream::Error error{
-                .system = "glfw::Window",
+                .system = "Glfw::Window",
                 .operation = "glfwCreateWindow",
                 .description = "Failed to initialize window",
                 .code = ModdersDream::ErrorCode::InitializationFailed
@@ -576,7 +576,7 @@ public:
         Callback::InitializeError();
         if (!glfwInit()) {
             Error error = {
-                .system = "glfw::Context",
+                .system = "Glfw::Context",
                 .operation = "glfwInit",
                 .description = "Failed to initialize GLFW",
                 .code = ModdersDream::ErrorCode::InitializationFailed
