@@ -162,6 +162,18 @@ public:
         deviceContext_->WaitForIdle();
     }
 
+    Diligent::IRenderDevice* Device() {
+        return device_;
+    }
+
+    Diligent::IDeviceContext* DeviceContext() {
+        return deviceContext_;
+    }
+
+    Diligent::ISwapChain* SwapChain() {
+        return swapChain_;
+    }
+
 private:
     Diligent::RefCntAutoPtr<Diligent::IRenderDevice> device_;
     Diligent::RefCntAutoPtr<Diligent::IDeviceContext> deviceContext_;
