@@ -28,6 +28,14 @@ public:
         return *error_;
     }
 
+    ErrorCode GetErrorCode() const {
+        return error_.value().code;
+    }
+
+    int GetErrorCodeInt() const {
+        return static_cast<int>(error_.value().code);
+    }
+
     void ResetError() {
         error_.reset();
     }
