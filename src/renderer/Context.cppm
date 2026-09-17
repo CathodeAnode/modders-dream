@@ -15,6 +15,7 @@ public:
     explicit Context(Glfw::Window& window) {
         Diligent::NativeWindow nativeWindow;
 #ifdef __linux__
+        logger_.Log(LogLevel::Info, "Detected linux");
         // TODO: Clean this. Maybe move it to Glfw but a bigger change may be needed, but not sure.
         // Assign window
         nativeWindow.pDisplay = Glfw::GetDisplay();
@@ -66,6 +67,7 @@ public:
             return;
         }
 #elifdef _WIN32
+        logger_.Log(LogLevel::Info, "Detected win32");
         // Assign window
         nativeWindow.hWnd = window.GetWindow();
 
@@ -97,6 +99,7 @@ public:
             return;
         }
 #elifdef __APPLE__
+        logger_.Log(LogLevel::Info, "Detected apple");
         // Assign window
         nativeWindow.pNSView = window.GetWindow();
 
@@ -128,6 +131,7 @@ public:
             return;
         }
 #else
+        logger_Log(LogLevel::Info, "Detected unsupported platform or failed to detect");
         ModdersDream::Error error{
             .system = "Renderer::Context",
             .operation = "Platform selection",
@@ -175,11 +179,12 @@ public:
     }
 
 private:
+    Logger logger_ = Logger("Renderer::Context");
     Diligent::RefCntAutoPtr<Diligent::IRenderDevice> device_;
     Diligent::RefCntAutoPtr<Diligent::IDeviceContext> deviceContext_;
     Diligent::RefCntAutoPtr<Diligent::ISwapChain> swapChain_;
 
-    inline static Logger logger_ = Logger("Diligent");
+    inline static Logger diligentLogger_ = Logger("Diligent");
     static void DiligentLog(Diligent::DebugMessageSeverity severity, const char* message, const char* function, const char* file, int line) {
         std::string type;
         switch (severity) {
@@ -196,7 +201,7 @@ private:
                 type = LogLevel::Fatal;
                 break;
         }
-        logger_.Log(type, "{} [{}:{} in {}()]", message, file, line, function);
+        diligentLogger_.Log(type, "{} [{}:{} in {}()]", message, file, line, function);
     }
 };
 
