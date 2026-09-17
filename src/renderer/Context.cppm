@@ -186,11 +186,11 @@ private:
 
     inline static Logger diligentLogger_ = Logger("Diligent");
     static void DiligentLog(Diligent::DebugMessageSeverity severity, const char* message, const char* function, const char* file, int line) {
-        std::string type;
+        std::string_view type = LogLevel::Info;
         switch (severity) {
             case Diligent::DEBUG_MESSAGE_SEVERITY_INFO:
-                break;
                 type = LogLevel::Info;
+                break;
             case Diligent::DEBUG_MESSAGE_SEVERITY_WARNING:
                 type = LogLevel::Warn;
                 break;
@@ -201,7 +201,15 @@ private:
                 type = LogLevel::Fatal;
                 break;
         }
-        diligentLogger_.Log(type, "{} [{}:{} in {}()]", message, file, line, function);
+        // Diligent messages may omit source-location strings.
+        diligentLogger_.Log(
+            type,
+            "{} [{}:{} in {}()]",
+            message ? message : "",
+            file ? file : "unknown",
+            line,
+            function ? function : "unknown"
+        );
     }
 };
 
