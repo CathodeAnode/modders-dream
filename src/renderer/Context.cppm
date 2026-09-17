@@ -26,6 +26,7 @@ public:
                 );
                 break;
             case Glfw::Platform::Wayland:
+                // TODO: Make cursor theme not depend on XCURSOR_THEME
                 nativeWindow.pWaylandSurface = window.GetWindow();
                 break;
             default:
