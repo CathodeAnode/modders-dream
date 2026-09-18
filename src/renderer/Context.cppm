@@ -1,3 +1,5 @@
+module;
+#include "GraphicsTypes.h"
 export module ModdersDream.Renderer.Context;
 
 import ModdersDream.Renderer.Diligent;
@@ -12,7 +14,7 @@ export namespace ModdersDream::Renderer {
 
 class Context : public ErrorHandler {
 public:
-    explicit Context(Glfw::Window& window) {
+    explicit Context(Glfw::Window& window) : window_(window) {
         Diligent::NativeWindow nativeWindow;
 #ifdef __linux__
         logger_.Log(LogLevel::Info, "Detected linux");
@@ -167,6 +169,16 @@ public:
         deviceContext_->WaitForIdle();
     }
 
+    void Resize() {
+        Math::Vector2i size = window_.GetFramebufferSize();
+
+        const Diligent::SwapChainDesc& desc = swapChain_->GetDesc();
+        if (desc.Width != static_cast<Diligent::Uint32>(size.x()) ||
+            desc.Height != static_cast<Diligent::Uint32>(size.y())) {
+            swapChain_->Resize(static_cast<Diligent::Uint32>(size.x()), static_cast<Diligent::Uint32>(size.y()));
+        }
+    }
+
     Diligent::IRenderDevice* Device() {
         return device_;
     }
@@ -181,6 +193,7 @@ public:
 
 private:
     Logger logger_ = Logger("Renderer::Context");
+    const Glfw::Window& window_;
     Diligent::RefCntAutoPtr<Diligent::IRenderDevice> device_;
     Diligent::RefCntAutoPtr<Diligent::IDeviceContext> deviceContext_;
     Diligent::RefCntAutoPtr<Diligent::ISwapChain> swapChain_;

@@ -54,11 +54,7 @@ int main() {
             continue;
         }
 
-        const auto& desc = rendererContext.SwapChain()->GetDesc();
-        if (desc.Width != static_cast<Diligent::Uint32>(size.x()) ||
-            desc.Height != static_cast<Diligent::Uint32>(size.y())) {
-            rendererContext.SwapChain()->Resize(static_cast<Diligent::Uint32>(size.x()), static_cast<Diligent::Uint32>(size.y()));
-        }
+        rendererContext.Resize();
 
         auto* renderTarget = rendererContext.SwapChain()->GetCurrentBackBufferRTV();
         rendererContext.DeviceContext()->SetRenderTargets(
