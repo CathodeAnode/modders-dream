@@ -380,7 +380,7 @@ void* GetDisplay() noexcept {
     return nullptr;
 }
 
-class Monitor {
+class Monitor : public ModdersDream::ErrorHandler {
 public:
     static Monitor Primary() {
         return Monitor(glfwGetPrimaryMonitor());
@@ -442,7 +442,19 @@ public:
 
 private:
     explicit Monitor(GLFWmonitor* monitor)
-        : monitor_(monitor) {}
+        : monitor_(monitor) {
+        if (!monitor) {
+            const Error error = {
+                .system = "Glfw::Monitor",
+                .operation = "Monitor construction",
+                .description = "Null monitor",
+                .code = ModdersDream::ErrorCode::InitializationFailed
+            };
+
+            SubmitError(error);
+            return;
+        }
+    }
 
     GLFWmonitor* monitor_;
 };
