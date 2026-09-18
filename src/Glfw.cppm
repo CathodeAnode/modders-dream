@@ -450,24 +450,6 @@ public:
     explicit Window(const Math::Vector2i size, ModdersDream::ZStringView title, Monitor monitor)
         : Window(size, title, monitor.GetNativeHandle()) {}
 
-    explicit Window(const Math::Vector2i size, ModdersDream::ZStringView title, GLFWmonitor* monitor) {
-        this->window_ = glfwCreateWindow(size.x(), size.y(), title, monitor, nullptr);
-
-        if (!this->window_) {
-            const ModdersDream::Error error{
-                .system = "Glfw::Window",
-                .operation = "glfwCreateWindow",
-                .description = "Failed to initialize window",
-                .code = ModdersDream::ErrorCode::InitializationFailed
-            };
-            SubmitError(error);
-            return;
-        }
-
-        this->windows_[window_] = this;
-        Callback::InitializeWindow(this->window_);
-    }
-
     inline ~Window() noexcept {
         glfwDestroyWindow(this->window_);
     }
@@ -555,6 +537,24 @@ public:
     }
 
 private:
+    explicit Window(const Math::Vector2i size, ModdersDream::ZStringView title, GLFWmonitor* monitor) {
+        this->window_ = glfwCreateWindow(size.x(), size.y(), title, monitor, nullptr);
+
+        if (!this->window_) {
+            const ModdersDream::Error error{
+                .system = "Glfw::Window",
+                .operation = "glfwCreateWindow",
+                .description = "Failed to initialize window",
+                .code = ModdersDream::ErrorCode::InitializationFailed
+            };
+            SubmitError(error);
+            return;
+        }
+
+        this->windows_[window_] = this;
+        Callback::InitializeWindow(this->window_);
+    }
+
     GLFWwindow* window_;
 
     std::vector<Event> generalEvents_;
