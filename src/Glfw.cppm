@@ -508,6 +508,13 @@ public:
         return size;
     }
 
+    inline void WaitForNonzeroFramebuffer() const noexcept {
+        Math::Vector2i size = GetFramebufferSize();
+        if (size.x() <= 0 || size.y() <= 0) {
+            glfwWaitEvents();
+        }
+    }
+
     inline bool ShouldClose() const noexcept {
         return glfwWindowShouldClose(this->window_);
     }

@@ -36,6 +36,8 @@ int main() {
     constexpr float ClearColor[] = {1.0f, 0.0f, 0.0f, 1.0f};
     bool running = true;
     while (running && !window.ShouldClose()) {
+        window.WaitForNonzeroFramebuffer();
+
         Glfw::PollEvents();
 
         for (const Glfw::KeyEvent& event : window.KeyEvents()) {
@@ -46,12 +48,6 @@ int main() {
         window.ClearEvents();
         if (!running || window.ShouldClose()) {
             break;
-        }
-
-        Math::Vector2i size = window.GetFramebufferSize();
-        if (size.x() <= 0 || size.y() <= 0) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(16));
-            continue;
         }
 
         rendererContext.Resize();
