@@ -393,11 +393,9 @@ public:
         std::vector<Monitor> result;
         result.reserve(count);
 
-        std::memcpy(
-            result.data(),
-            monitors,
-            count * sizeof(GLFWmonitor*)
-        );
+        for (int i = 0; i < count; i++) {
+            result.push_back(Monitor(monitors[i]));
+        }
 
         return result;
     }
