@@ -485,6 +485,35 @@ public:
         }
     }
 
+    inline void SetMonitor(Monitor monitor, Math::Vector2i position, Math::Vector2i size, int refreshRate) noexcept {
+        glfwSetWindowMonitor(window_, monitor.GetNativeHandle(), position.x(), position.y(), size.x(), size.y(), refreshRate);
+    }
+
+    inline void SetMonitor(Monitor monitor, Math::Vector2i position, Math::Vector2i size) noexcept {
+        const GLFWvidmode* mode = glfwGetVideoMode(monitor.GetNativeHandle());
+        glfwSetWindowMonitor(window_, monitor.GetNativeHandle(), position.x(), position.y(), size.x(), size.y(), mode->refreshRate);
+    }
+
+    inline void SetMonitor(std::nullptr_t, Math::Vector2i position, Math::Vector2i size) noexcept {
+        glfwSetWindowMonitor(window_, nullptr, position.x(), position.y(), size.x(), size.y(), 0);
+    }
+
+    inline void SetMonitor(Math::Vector2i position, Math::Vector2i size) noexcept {
+        glfwSetWindowMonitor(window_, nullptr, position.x(), position.y(), size.x(), size.y(), 0);
+    }
+
+    inline void SetMonitorFullscreen(Monitor monitor) noexcept {
+        const GLFWvidmode* mode = glfwGetVideoMode(monitor.GetNativeHandle());
+        glfwSetWindowMonitor(window_, monitor.GetNativeHandle(), 0, 0, mode->width, mode->height, mode->refreshRate);
+    }
+
+    inline void SetWindowedToCenterOfMonitor(Monitor monitor, Math::Vector2i size) noexcept {
+        const GLFWvidmode* mode = glfwGetVideoMode(monitor.GetNativeHandle());
+        int posx = mode->width / 2 - size.x() / 2;
+        int posy = mode->height / 2 - size.y() / 2;
+        glfwSetWindowMonitor(window_, nullptr, posx, posy, size.x(), size.y(), mode->refreshRate);
+    }
+
     inline bool ShouldClose() const noexcept {
         return glfwWindowShouldClose(this->window_);
     }
