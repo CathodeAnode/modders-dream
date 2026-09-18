@@ -382,6 +382,26 @@ void* GetDisplay() noexcept {
 
 class Monitor {
 public:
+    static Monitor Primary() {
+        return Monitor(glfwGetPrimaryMonitor());
+    }
+
+    static std::vector<Monitor> GetAll() {
+        int count;
+        GLFWmonitor** monitors = glfwGetMonitors(&count);
+
+        std::vector<Monitor> result;
+        result.reserve(count);
+
+        std::memcpy(
+            result.data(),
+            monitors,
+            count * sizeof(GLFWmonitor*)
+        );
+
+        return result;
+    }
+
     inline ModdersDream::ZStringView GetName() const noexcept {
         return glfwGetMonitorName(this->monitor_);
     }
@@ -423,6 +443,9 @@ public:
     }
 
 private:
+    explicit Monitor(GLFWmonitor* monitor)
+        : monitor_(monitor) {}
+
     GLFWmonitor* monitor_;
 };
 
