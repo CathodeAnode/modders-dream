@@ -1,4 +1,5 @@
 import ModdersDream.Logger;
+import ModdersDream.Settings;
 import ModdersDream.Glfw;
 import ModdersDream.Math;
 import ModdersDream.Renderer.Diligent;
@@ -10,6 +11,9 @@ using namespace ModdersDream;
 namespace Diligent = ModdersDream::Renderer::Diligent;
 
 int main() {
+    // For far future me: load savedata HERE
+    Settings settings;
+
     Glfw::Context glfwContext;
 
     if (glfwContext.HasError()) {
@@ -19,7 +23,18 @@ int main() {
 
     Glfw::SetWindowHint(Glfw::WindowHint::ClientApi, Glfw::WindowHintValue::NoApi);
 
+    Glfw::Monitor monitor = Glfw::Monitor::Primary();
+
+    if (monitor.HasError()) {
+        Logger::Log(monitor.GetError());
+        return monitor.GetErrorCodeInt();
+    }
+
     Glfw::Window window({800, 800}, "Modder's Dream");
+
+    if (settings.fullscreen) {
+        window.SetMonitorFullscreen(monitor);
+    }
 
     if (window.HasError()) {
         Logger::Log(window.GetError());
@@ -64,7 +79,7 @@ int main() {
             ClearColor,
             Diligent::ResourceStateTransitionMode::RESOURCE_STATE_TRANSITION_MODE_TRANSITION
         );
-        rendererContext.SwapChain()->Present(1);
+        rendererContext.SwapChain()->Present(settings.vsync);
     }
 
     rendererContext.DeviceContext()->WaitForIdle();
