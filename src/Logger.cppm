@@ -17,7 +17,6 @@ constexpr std::string_view Info = "INFO";
 constexpr std::string_view Warn = "WARN";
 constexpr std::string_view Error = "ERROR";
 constexpr std::string_view Fatal = "FATAL";
-constexpr std::string_view Assert = "ASSERT";
 
 } // namespace LogLevel
 
@@ -45,12 +44,6 @@ public:
             static_cast<std::uint32_t>(error.code),
             error.description
         );
-    }
-
-    template <typename... Args>
-    inline static void Assert(std::format_string<Args...> format, Args&&... args) {
-        Log(LogLevel::Assert, format, std::forward<Args>(args)...);
-        std::abort();
     }
 };
 
