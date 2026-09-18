@@ -350,19 +350,19 @@ using VideoMode = GLFWvidmode;
 
 inline constexpr auto PollEvents = glfwPollEvents;
 
-inline constexpr void SetWindowHint(WindowHint hint, WindowHintValue value) {
+inline void SetWindowHint(WindowHint hint, WindowHintValue value) noexcept {
     glfwWindowHint(static_cast<int>(hint), static_cast<int>(value));
 }
 
-inline constexpr void SetWindowHint(WindowHint hint, int value) {
+inline void SetWindowHint(WindowHint hint, int value) noexcept {
     glfwWindowHint(static_cast<int>(hint), value);
 }
 
-inline constexpr void SetWindowHint(int hint, int value) {
+inline void SetWindowHint(int hint, int value) noexcept {
     glfwWindowHint(hint, value);
 }
 
-inline constexpr Platform GetPlatform() noexcept {
+inline Platform GetPlatform() noexcept {
     return static_cast<Platform>(glfwGetPlatform());
 }
 
@@ -382,43 +382,43 @@ void* GetDisplay() noexcept {
 
 class Monitor {
 public:
-    ModdersDream::ZStringView GetName() {
+    inline ModdersDream::ZStringView GetName() const noexcept {
         return glfwGetMonitorName(this->monitor_);
     }
 
-    inline Math::Vector2i GetPosition() {
+    inline Math::Vector2i GetPosition() const noexcept {
         Math::Vector2i position;
         glfwGetMonitorPos(this->monitor_, &position.x(), &position.y());
         return position;
     }
 
-    inline void GetWorkArea(Math::Vector2i& position, Math::Vector2i& size) {
+    void GetWorkArea(Math::Vector2i& position, Math::Vector2i& size) const noexcept {
         Math::Vector2i workPosition;
         Math::Vector2i workSize;
         glfwGetMonitorWorkarea(this->monitor_, &workPosition.x(), &workPosition.y(), &workSize.x(), &workSize.y());
     }
 
-    inline Math::Vector2i GetPhysicalSizeMm() {
+    inline Math::Vector2i GetPhysicalSizeMm() const noexcept {
         Math::Vector2i sizeMm;
         glfwGetMonitorPhysicalSize(this->monitor_, &sizeMm.x(), &sizeMm.y());
         return sizeMm;
     }
 
-    inline Math::Vector2f GetContentScale() {
+    inline Math::Vector2f GetContentScale() const noexcept {
         Math::Vector2f scale;
         glfwGetMonitorContentScale(this->monitor_, &scale.x(), &scale.y());
         return scale;
     }
 
-    inline const VideoMode* GetVideoMode() {
+    inline const VideoMode* GetVideoMode() const noexcept {
         return glfwGetVideoMode(this->monitor_);
     }
 
-    inline const VideoMode* GetVideoModes(int* count) {
+    inline const VideoMode* GetVideoModes(int* count) const noexcept {
         return glfwGetVideoModes(this->monitor_, count);
     }
 
-    inline GLFWmonitor* GetNativeHandle() {
+    inline GLFWmonitor* GetNativeHandle() const noexcept {
         return monitor_;
     }
 
@@ -444,11 +444,11 @@ void InitializeWindow(GLFWwindow* window);
 
 class Window : public ModdersDream::ErrorHandler {
 public:
-    inline Window(Math::Vector2i size, ModdersDream::ZStringView title) {
+    explicit Window(const Math::Vector2i size, ModdersDream::ZStringView title) {
         this->window_ = glfwCreateWindow(size.x(), size.y(), title, nullptr, nullptr);
 
         if (!this->window_) {
-            ModdersDream::Error error{
+            const ModdersDream::Error error{
                 .system = "Glfw::Window",
                 .operation = "glfwCreateWindow",
                 .description = "Failed to initialize window",
@@ -462,11 +462,11 @@ public:
         Callback::InitializeWindow(this->window_);
     }
 
-    inline Window(Math::Vector2i size, ModdersDream::ZStringView title, Monitor monitor) {
+    explicit Window(const Math::Vector2i size, ModdersDream::ZStringView title, const Monitor monitor) {
         this->window_ = glfwCreateWindow(size.x(), size.y(), title, monitor.GetNativeHandle(), nullptr);
 
         if (!this->window_) {
-            ModdersDream::Error error{
+            const ModdersDream::Error error{
                 .system = "Glfw::Window",
                 .operation = "glfwCreateWindow",
                 .description = "Failed to initialize window",
@@ -480,11 +480,11 @@ public:
         Callback::InitializeWindow(this->window_);
     }
 
-    inline ~Window() {
+    inline ~Window() noexcept {
         glfwDestroyWindow(this->window_);
     }
 
-    void* GetWindow() noexcept {
+    void* GetWindow() const noexcept {
 #ifdef _WIN32
         return glfwGetWin32Window(this->window_);
 #elifdef __APPLE__
@@ -502,57 +502,57 @@ public:
         return nullptr;
     }
 
-    inline Math::Vector2i GetFramebufferSize() {
+    inline Math::Vector2i GetFramebufferSize() const noexcept {
         Math::Vector2i size;
         glfwGetFramebufferSize(this->window_, &size.x(), &size.y());
         return size;
     }
 
-    inline bool ShouldClose() const {
+    inline bool ShouldClose() const noexcept {
         return glfwWindowShouldClose(this->window_);
     }
 
-    inline const GLFWwindow* GetHandle() const {
+    inline const GLFWwindow* GetHandle() const noexcept {
         return this->window_;
     }
 
-    inline static Window* GetRegisteredWindow(GLFWwindow* handle) {
+    static Window* GetRegisteredWindow(GLFWwindow* handle) {
         return windows_[handle];
     }
 
-    inline const std::vector<Event>& GeneralEvents() {
+    inline const std::vector<Event>& GeneralEvents() const noexcept {
         return generalEvents_;
     }
 
-    inline const std::vector<KeyEvent>& KeyEvents() {
+    inline const std::vector<KeyEvent>& KeyEvents() const noexcept {
         return keyEvents_;
     }
 
-    inline const std::vector<CharEvent>& CharEvents() {
+    inline const std::vector<CharEvent>& CharEvents() const noexcept {
         return charEvents_;
     }
 
-    inline const std::vector<MouseEvent>& MouseEvents() {
+    inline const std::vector<MouseEvent>& MouseEvents() const noexcept {
         return mouseEvents_;
     }
 
-    inline void AddGeneralEvent(Event& event) {
+    inline void AddGeneralEvent(const Event& event) {
         generalEvents_.push_back(event);
     }
 
-    inline void AddKeyEvent(KeyEvent& event) {
+    inline void AddKeyEvent(const KeyEvent& event) {
         keyEvents_.push_back(event);
     }
 
-    inline void AddCharEvent(CharEvent& event) {
+    inline void AddCharEvent(const CharEvent& event) {
         charEvents_.push_back(event);
     }
 
-    inline void AddMouseEvent(MouseEvent& event) {
+    inline void AddMouseEvent(const MouseEvent& event) {
         mouseEvents_.push_back(event);
     }
 
-    void ClearEvents() {
+    void ClearEvents() noexcept {
         generalEvents_.clear();
         keyEvents_.clear();
         charEvents_.clear();
@@ -575,7 +575,7 @@ public:
     Context() {
         Callback::InitializeError();
         if (!glfwInit()) {
-            Error error = {
+            const Error error = {
                 .system = "Glfw::Context",
                 .operation = "glfwInit",
                 .description = "Failed to initialize GLFW",
@@ -587,7 +587,7 @@ public:
         Callback::InitializeGlobal();
     }
 
-    ~Context() {
+    ~Context() noexcept {
         glfwTerminate();
     }
 };
@@ -596,23 +596,23 @@ std::vector<Event> globalEvents;
 
 namespace Callback {
 
-inline void AddGlobalEvent(Event& event) {
+inline void AddGlobalEvent(const Event& event) {
     globalEvents.push_back(event);
 };
 
-inline void AddGeneralEvent(GLFWwindow* window, Event& event) {
+inline void AddGeneralEvent(GLFWwindow* window, const Event& event) {
     Window::GetRegisteredWindow(window)->AddGeneralEvent(event);
 }
 
-inline void AddKeyEvent(GLFWwindow* window, KeyEvent& event) {
+inline void AddKeyEvent(GLFWwindow* window, const KeyEvent& event) {
     Window::GetRegisteredWindow(window)->AddKeyEvent(event);
 }
 
-inline void AddCharEvent(GLFWwindow* window, CharEvent& event) {
+inline void AddCharEvent(GLFWwindow* window, const CharEvent& event) {
     Window::GetRegisteredWindow(window)->AddCharEvent(event);
 }
 
-inline void AddMouseEvent(GLFWwindow* window, MouseEvent& event) {
+inline void AddMouseEvent(GLFWwindow* window, const MouseEvent& event) {
     Window::GetRegisteredWindow(window)->AddMouseEvent(event);
 }
 
@@ -621,47 +621,47 @@ inline void AddMouseEvent(GLFWwindow* window, MouseEvent& event) {
 //
 
 void WindowPos(GLFWwindow* window, int xPos, int yPos) {
-    Event event = WindowPosEvent({xPos, yPos});
+    const Event event = WindowPosEvent({xPos, yPos});
     AddGeneralEvent(window, event);
 }
 
 void WindowSize(GLFWwindow* window, int xSize, int ySize) {
-    Event event = WindowSizeEvent({xSize, ySize});
+    const Event event = WindowSizeEvent({xSize, ySize});
     AddGeneralEvent(window, event);
 }
 
 void WindowClose(GLFWwindow* window) {
-    Event event = WindowCloseEvent();
+    const Event event = WindowCloseEvent();
     AddGeneralEvent(window, event);
 }
 
 void WindowRefresh(GLFWwindow* window) {
-    Event event = WindowRefreshEvent();
+    const Event event = WindowRefreshEvent();
     AddGeneralEvent(window, event);
 }
 
 void WindowFocus(GLFWwindow* window, int focused) {
-    Event event = WindowFocusEvent(focused);
+    const Event event = WindowFocusEvent(focused);
     AddGeneralEvent(window, event);
 }
 
 void WindowIconify(GLFWwindow* window, int iconified) {
-    Event event = WindowIconifyEvent(iconified);
+    const Event event = WindowIconifyEvent(iconified);
     AddGeneralEvent(window, event);
 }
 
 void WindowMaximize(GLFWwindow* window, int maximized) {
-    Event event = WindowMaximizeEvent(maximized);
+    const Event event = WindowMaximizeEvent(maximized);
     AddGeneralEvent(window, event);
 }
 
 void FramebufferSize(GLFWwindow* window, int xSize, int ySize) {
-    Event event = FramebufferSizeEvent({xSize, ySize});
+    const Event event = FramebufferSizeEvent({xSize, ySize});
     AddGeneralEvent(window, event);
 }
 
 void WindowContentScale(GLFWwindow* window, float xScale, float yScale) {
-    Event event = WindowContentScaleEvent({xScale, yScale});
+    const Event event = WindowContentScaleEvent({xScale, yScale});
     AddGeneralEvent(window, event);
 }
 
@@ -670,27 +670,27 @@ void WindowContentScale(GLFWwindow* window, float xScale, float yScale) {
 //
 
 void KeyCallback(GLFWwindow* window, int key, int scanCode, int action, int mods) {
-    KeyEvent event(static_cast<Key>(key), static_cast<Action>(action), static_cast<KeyModifier>(mods));
+    const KeyEvent event(static_cast<Key>(key), static_cast<Action>(action), static_cast<KeyModifier>(mods));
     AddKeyEvent(window, event);
 }
 
 void Character(GLFWwindow* window, unsigned int codePoint) {
-    CharEvent event(codePoint);
+    const CharEvent event(codePoint);
     AddCharEvent(window, event);
 }
 
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
-    MouseEvent event = MouseButtonEvent(static_cast<MouseButton>(button), static_cast<Action>(action));
+    const MouseEvent event = MouseButtonEvent(static_cast<MouseButton>(button), static_cast<Action>(action));
     AddMouseEvent(window, event);
 }
 
 void CursorPos(GLFWwindow* window, double xPos, double yPos) {
-    MouseEvent event = MousePosEvent({xPos, yPos});
+    const MouseEvent event = MousePosEvent({xPos, yPos});
     AddMouseEvent(window, event);
 }
 
 void Scroll(GLFWwindow* window, double xOffset, double yOffset) {
-    MouseEvent event = MouseScrollEvent({xOffset, yOffset});
+    const MouseEvent event = MouseScrollEvent({xOffset, yOffset});
     AddMouseEvent(window, event);
 }
 
@@ -701,7 +701,7 @@ void Drop(GLFWwindow* window, int count, const char** paths) {
         drop.paths.emplace_back(paths[i]);
     }
 
-    Event event = drop;
+    const Event event = drop;
     AddGeneralEvent(window, event);
 }
 
