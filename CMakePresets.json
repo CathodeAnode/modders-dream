@@ -2,10 +2,10 @@
     "version": 6,
     "configurePresets": [
         {
-            "name": "clang",
-            "displayName": "Clang + libc++ (also used by clangd)",
+            "name": "debug",
+            "displayName": "Debug (clang)",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build",
+            "binaryDir": "${sourceDir}/build/debug",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_COMPILER": "clang",
@@ -14,25 +14,34 @@
             }
         },
         {
-            "name": "gcc",
-            "displayName": "GCC + libstdc++",
+            "name": "release",
+            "displayName": "Release (clang)",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build",
+            "binaryDir": "${sourceDir}/build/release",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_CXX_COMPILER": "g++"
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_CXX_FLAGS": "-stdlib=libc++"
             }
         }
     ],
     "buildPresets": [
         {
-            "name": "clang",
-            "configurePreset": "clang"
+            "name": "debug",
+            "configurePreset": "debug",
+            "targets": [
+                "modders-dream",
+                "shaders"
+            ]
         },
         {
-            "name": "gcc",
-            "configurePreset": "gcc"
+            "name": "release",
+            "configurePreset": "release",
+            "targets": [
+                "modders-dream",
+                "shaders"
+            ]
         }
     ]
 }

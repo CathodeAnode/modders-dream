@@ -1,22 +1,29 @@
 ## Build
 
-From the repository root, configure the Clang build:
+Run these commands from the repository root.
+
+Debug uses Clang with libc++:
 
 ```sh
-cmake --preset clang
+cmake --preset debug
+cmake --build --preset debug
 ```
 
-Then compile the project:
+Release uses Clang with libc++ and `-O3` optimization:
 
 ```sh
-cmake --build --preset clang
+cmake --preset release
+cmake --build --preset release
 ```
 
-For a Release build:
+Both build the game and shaders, including stale shader cleanup. Unchanged shader
+outputs are reused; changed shaders and their dependencies are recompiled.
 
-```sh
-cmake --preset clang -DCMAKE_BUILD_TYPE=Release
-cmake --build --preset clang
-```
+Outputs live in `build/debug/` and `build/release/`, respectively. You can keep
+both builds without clearing the build directory when switching configurations.
 
-To compile with GCC instead of Clang, replace `clang` with `gcc`. You need to clear the `build/` folder before switching compilers.
+To build only shaders, use `cmake --build --preset debug --target shaders`
+(or substitute `release`).
+
+`cmake --build --preset debug` (or `release`) only builds an already configured
+directory; it cannot recreate a deleted build tree.
