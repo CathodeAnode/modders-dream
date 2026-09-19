@@ -18,6 +18,9 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+include(cmake/Shaders.cmake)
+add_subdirectory(shaders)
+
 add_subdirectory(external)
 
 add_subdirectory(src)
@@ -25,6 +28,8 @@ add_subdirectory(src)
 add_executable(modders-dream
     ${SOURCES}
 )
+
+add_dependencies(modders-dream shaders)
 
 target_sources(modders-dream
     PRIVATE
