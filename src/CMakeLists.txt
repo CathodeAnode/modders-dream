@@ -9,6 +9,7 @@ set(SOURCES
 set(MODULES
     ${MODULES}
     ${CMAKE_CURRENT_SOURCE_DIR}/Math.cppm
+    ${CMAKE_CURRENT_SOURCE_DIR}/FixedString.cppm
     ${CMAKE_CURRENT_SOURCE_DIR}/Mustache.cppm
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings.cppm
     ${CMAKE_CURRENT_SOURCE_DIR}/Logger.cppm
