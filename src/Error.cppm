@@ -12,10 +12,9 @@ enum class ErrorCode : std::uint32_t {
 };
 
 struct Error {
-    std::string system;
-    std::string operation;
+    ErrorCode code;
     std::string description;
-    ErrorCode code = ErrorCode::Error;
+    std::source_location location;
 };
 
 class ErrorHandler {
@@ -41,8 +40,12 @@ public:
     }
 
 protected:
-    void SubmitError(Error error) {
-        this->error_ = std::move(error);
+    void SubmitError(
+        ErrorCode code,
+        const std::string& description,
+        std::source_location location = std::source_location::current()
+    ) {
+        error_ = Error{code, description, location};
     }
 
 private:
