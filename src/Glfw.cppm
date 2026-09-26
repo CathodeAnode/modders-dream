@@ -283,7 +283,6 @@ enum class WindowHint : unsigned int {
     RedBits = GLFW_RED_BITS,
     GreenBits = GLFW_GREEN_BITS,
     BlueBits = GLFW_BLUE_BITS,
-    AlphaBits,
     DepthBits = GLFW_DEPTH_BITS,
     StencilBits = GLFW_STENCIL_BITS,
     AccumRedBits = GLFW_ACCUM_RED_BITS,
