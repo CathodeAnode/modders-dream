@@ -23,6 +23,9 @@ add_subdirectory(shaders)
 
 add_subdirectory(external)
 
+# Mustache's dispatch.hpp uses std::function without including <functional>.
+target_precompile_headers(mustache PRIVATE "$<$<COMPILE_LANGUAGE:CXX>:<functional>>")
+
 add_subdirectory(src)
 
 add_executable(modders-dream
@@ -42,6 +45,7 @@ target_link_libraries(modders-dream PRIVATE
     Diligent-Common
     Diligent-GraphicsEngineVk-static
     glfw
+    mustache
 )
 
 target_include_directories(modders-dream PRIVATE
