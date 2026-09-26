@@ -1,6 +1,6 @@
 {
     "clangd.arguments": [
         "--experimental-modules-support",
-        "--compile-commands-dir=${workspaceFolder}/build"
+        "--compile-commands-dir=${workspaceFolder}/build/debug"
     ]
 }
