@@ -1,0 +1,11 @@
+set(SOURCES
+    ${SOURCES}
+    PARENT_SCOPE
+)
+
+set(MODULES
+    ${MODULES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Entity.cppm
+    ${CMAKE_CURRENT_SOURCE_DIR}/MeshEntity.cppm
+    PARENT_SCOPE
+)
