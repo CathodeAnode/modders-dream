@@ -6,6 +6,6 @@ set(SOURCES
 set(MODULES
     ${MODULES}
     ${CMAKE_CURRENT_SOURCE_DIR}/Entity.cppm
-    ${CMAKE_CURRENT_SOURCE_DIR}/MeshEntity.cppm
+    ${CMAKE_CURRENT_SOURCE_DIR}/ObjectEntity.cppm
     PARENT_SCOPE
 )
