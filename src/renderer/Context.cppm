@@ -17,7 +17,7 @@ public:
     explicit Context(Glfw::Window& window) : window_(window) {
         Diligent::NativeWindow nativeWindow;
 #ifdef __linux__
-        logger_.Log(LogLevel::Info, "Detected linux");
+        ModdersDream::Log<ModdersDream::LogLevel::Info>("Detected linux");
         // TODO: Clean this. Maybe move it to Glfw but a bigger change may be needed, but not sure.
         // Assign window
         nativeWindow.pDisplay = Glfw::GetDisplay();
@@ -32,62 +32,46 @@ public:
                 nativeWindow.pWaylandSurface = window.GetWindow();
                 break;
             default:
-                ModdersDream::Error error{
-                    .system = "Renderer::Context",
-                    .operation = "get_platform",
-                    .description = "Unsupported window platform (only X11 and Wayland are supported)",
-                    .code = ModdersDream::ErrorCode::Unsupported
-                };
-                SubmitError(error);
+                SubmitError(
+                    ModdersDream::ErrorCode::Unsupported,
+                    "Unsupported window platform (only X11 and Wayland are supported)"
+                );
                 return;
         }
 
         // Create context and device
         Diligent::IEngineFactoryVk* factory = Diligent::LoadAndGetEngineFactoryVk();
         if (!factory) {
-            ModdersDream::Error error{
-                .system = "Renderer::Context",
-                .operation = "LoadAndGetEngineFactoryVk",
-                .description = "Vulkan factory failed to initialize",
-                .code = ModdersDream::ErrorCode::InitializationFailed
-            };
-            SubmitError(error);
+            SubmitError(
+                ModdersDream::ErrorCode::InitializationFailed,
+                "Vulkan factory failed to initialize"
+            );
             return;
         }
-
-        factory->SetMessageCallback(DiligentLog);
 
         Diligent::EngineVkCreateInfo engineInfo;
         factory->CreateDeviceAndContextsVk(engineInfo, &device_, &deviceContext_);
         if (!device_ || !deviceContext_) {
-            ModdersDream::Error error{
-                .system = "Renderer::Context",
-                .operation = "CreateDeviceAndContextsVk",
-                .description = "Failed to create Vulkan device and context",
-                .code = ModdersDream::ErrorCode::InitializationFailed
-            };
-            SubmitError(error);
+            SubmitError(
+                ModdersDream::ErrorCode::InitializationFailed,
+                "Failed to create Vulkan device and context"
+            );
             return;
         }
 #elifdef _WIN32
-        logger_.Log(LogLevel::Info, "Detected win32");
+        ModdersDream::Log<ModdersDream::LogLevel::Info>("Detected win32");
         // Assign window
         nativeWindow.hWnd = window.GetWindow();
 
         // Create context and device
         Diligent::IEngineFactoryD3d12* factory = Diligent::LoadAndGetEngineFactoryD3D12();
         if (!factory) {
-            ModdersDream::Error error{
-                .system = "Renderer::Context",
-                .operation = "LoadAndGetEngineFactoryD3D12",
-                .description = "Direct3D 12 factory failed to initialize",
-                .code = ModdersDream::ErrorCode::InitializationFailed
-            };
-            SubmitError(error);
+            SubmitError(
+                ModdersDream::ErrorCode::InitializationFailed,
+                "Direct3D 12 factory failed to initialize"
+            )
             return;
         }
-
-        factory->SetMessageCallback(DiligentLog);
 
         Diligent::EngineD3d12CreateInfo engineInfo;
         factory->CreateDeviceAndContextsD3D12(engineInfo, &device_, &deviceContext_);
@@ -98,50 +82,42 @@ public:
                 .description = "Failed to create Direct3D 12 device and context",
                 .code = ModdersDream::ErrorCode::InitializationFailed
             };
-            SubmitError(error);
+            SubmitError(
+                ModdersDream::ErrorCode::InitializationFailed,
+                "Failed to create Direct3D 12 device and context"
+            );
             return;
         }
 #elifdef __APPLE__
-        logger_.Log(LogLevel::Info, "Detected apple");
+        ModdersDream::Log<ModdersDream::LogLevel::Info>("Detected apple");
         // Assign window
         nativeWindow.pNSView = window.GetWindow();
 
         // Create context and device
         Diligent::IEngineFactoryMtl* factory = Diligent::GetEngineFactoryMtl();
         if (!factory) {
-            ModdersDream::Error error{
-                .system = "Renderer::Context",
-                .operation = "GetEngineFactoryMtl",
-                .description = "Metal factory failed to initialize",
-                .code = ModdersDream::ErrorCode::InitializationFailed
-            };
-            SubmitError(error);
+            SubmitError(
+                ModdersDream::ErrorCode::InitializationFailed,
+                "Metal factory failed to initialize"
+            );
             return;
         }
-
-        factory->SetMessageCallback(DiligentLog);
 
         Diligent::EngineMtlCreateInfo engineInfo;
         factory->CreateDeviceAndContextsMtl(engineInfo, &device_, &deviceContext_);
         if (!device_ || !deviceContext_) {
-            ModdersDream::Error error{
-                .system = "Renderer::Context",
-                .operation = "CreateDeviceAndContextsMtl",
-                .description = "Failed to create Metal device and context",
-                .code = ModdersDream::ErrorCode::InitializationFailed
-            };
-            SubmitError(error);
+            SubmitError(
+                ModdersDream::ErrorCode::InitializationFailed,
+                "Failed to create Metal device and context"
+            );
             return;
         }
 #else
-        logger_Log(LogLevel::Info, "Detected unsupported platform or failed to detect");
-        ModdersDream::Error error{
-            .system = "Renderer::Context",
-            .operation = "Platform selection",
-            .description = "Unsupported platform (only Linux (X11 and Wayland only), Windows and Apple are supported)",
-            .code = ModdersDream::ErrorCode::Unsupported
-        };
-        SubmitError(error);
+        ModdersDream::Log<ModdersDream::LogLevel::Error>("Detected unsupported platform or failed to detect. Only Linux (X11 and Wayland only), Windows and Apple are supported");
+        SubmitError(
+            ModdersDream::ErrorCode::Unsupported, 
+            "Detected unsupported platform or failed to detect. Only Linux (X11 and Wayland only), Windows and Apple are supported"
+        );
         return;
 #endif
 
@@ -154,13 +130,10 @@ public:
 
         factory->CreateSwapChainVk(device_, deviceContext_, swapChainDesc, nativeWindow, &swapChain_);
         if (!swapChain_) {
-            ModdersDream::Error error{
-                .system = "CreateSwapChainVk",
-                .operation = "Swap chain creation",
-                .description = "Failed to create swap chain.",
-                .code = ModdersDream::ErrorCode::InitializationFailed
-            };
-            SubmitError(error);
+            SubmitError(
+                ModdersDream::ErrorCode::InitializationFailed,
+                "Failed to create swap chain"
+            );
             return;
         }
     }

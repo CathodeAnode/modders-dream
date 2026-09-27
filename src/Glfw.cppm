@@ -29,12 +29,6 @@ import ModdersDream.Math;
 
 import std;
 
-namespace {
-
-ModdersDream::Logger logger("GLFW");
-
-} // namespace
-
 export namespace ModdersDream::Glfw {
 
 enum class Key : int {
@@ -443,14 +437,9 @@ private:
     explicit Monitor(GLFWmonitor* monitor)
         : monitor_(monitor) {
         if (!monitor) {
-            const Error error = {
-                .system = "Glfw::Monitor",
-                .operation = "Monitor construction",
-                .description = "Null monitor",
-                .code = ModdersDream::ErrorCode::InitializationFailed
-            };
-
-            SubmitError(error);
+            SubmitError(ModdersDream::ErrorCode::InitializationFailed,
+                "Monitor was null."
+            );
             return;
         }
     }
@@ -602,13 +591,10 @@ private:
         this->window_ = glfwCreateWindow(size.x(), size.y(), title, monitor, nullptr);
 
         if (!this->window_) {
-            const ModdersDream::Error error{
-                .system = "Glfw::Window",
-                .operation = "glfwCreateWindow",
-                .description = "Failed to initialize window",
-                .code = ModdersDream::ErrorCode::InitializationFailed
-            };
-            SubmitError(error);
+            SubmitError(
+                ModdersDream::ErrorCode::InitializationFailed,
+                "Window initialization failed"
+            );
             return;
         }
 
@@ -631,13 +617,10 @@ public:
     Context() {
         Callback::InitializeError();
         if (!glfwInit()) {
-            const Error error = {
-                .system = "Glfw::Context",
-                .operation = "glfwInit",
-                .description = "Failed to initialize GLFW",
-                .code = ModdersDream::ErrorCode::InitializationFailed
-            };
-            ErrorHandler::SubmitError(error);
+            ErrorHandler::SubmitError(
+            ModdersDream::ErrorCode::InitializationFailed,
+            "GLFW initialization failed."
+            );
             return;
         }
         Callback::InitializeGlobal();
@@ -658,7 +641,7 @@ inline void AddGlobalEvent(const Event& event) {
 
 inline void AddGeneralEvent(GLFWwindow* window, const Event& event) {
     Window::GetRegisteredWindow(window)->AddGeneralEvent(event);
-}
+} 
 
 inline void AddKeyEvent(GLFWwindow* window, const KeyEvent& event) {
     Window::GetRegisteredWindow(window)->AddKeyEvent(event);
@@ -769,7 +752,7 @@ void Monitor(GLFWmonitor* monitor, int event) {
 }
 
 void ErrorCallback(int errorCode, const char* description) {
-    logger.Log(ModdersDream::LogLevel::Error, "{}: {}", errorCode, description);
+    ModdersDream::BasicLog<ModdersDream::LogLevel::Error>("{}: {}", errorCode, description);
 }
 
 // Context class calls it automatically

@@ -17,7 +17,7 @@ int main() {
     Glfw::Context glfwContext;
 
     if (glfwContext.HasError()) {
-        Logger::Log(glfwContext.GetError());
+        Log<LogLevel::Fatal>(glfwContext.GetError());
         return glfwContext.GetErrorCodeInt();
     }
 
@@ -26,7 +26,7 @@ int main() {
     Glfw::Monitor monitor = Glfw::Monitor::Primary();
 
     if (monitor.HasError()) {
-        Logger::Log(monitor.GetError());
+        Log<LogLevel::Fatal>(monitor.GetError());
         return monitor.GetErrorCodeInt();
     }
 
@@ -37,14 +37,14 @@ int main() {
     }
 
     if (window.HasError()) {
-        Logger::Log(window.GetError());
+        Log<LogLevel::Fatal>(window.GetError());
         return window.GetErrorCodeInt();
     }
 
     Renderer::Context rendererContext(window);
 
     if (rendererContext.HasError()) {
-        Logger::Log(rendererContext.GetError());
+        Log<LogLevel::Fatal>(rendererContext.GetError());
         return rendererContext.GetErrorCodeInt();
     }
 
