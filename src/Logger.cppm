@@ -6,25 +6,26 @@ import std;
 
 using namespace ModdersDream;
 
-namespace {
+namespace Time {
 
 inline const std::chrono::time_point startTime = std::chrono::steady_clock::now();
 
-} // namespace ModdersDream::LoggerDetail
+} // namespace Time
 
 export namespace ModdersDream {
 
 // TODO: Make argc/argv parser so that logger can have disableable levels of logging
 
-template<class... Args>
+template <class... Args>
 struct LocationFormat {
     std::format_string<Args...> format;
     std::source_location location;
 
-    template<class S>
+    template <class S>
     consteval LocationFormat(
         const S& text,
-        std::source_location loc = std::source_location::current())
+        std::source_location loc = std::source_location::current()
+    )
         : format(text), location(loc) {}
 };
 
@@ -39,19 +40,26 @@ enum class LogLevel : std::uint8_t {
 
 constexpr std::string_view LogLevelToStringView(LogLevel level) {
     switch (level) {
-        case LogLevel::Trace: return "TRACE";
-        case LogLevel::Debug: return "DEBUG";
-        case LogLevel::Info: return "INFO";
-        case LogLevel::Warn: return "WARN";
-        case LogLevel::Error: return "ERROR";
-        case LogLevel::Fatal: return "FATAL";
-        default: return "";
+        case LogLevel::Trace:
+            return "TRACE";
+        case LogLevel::Debug:
+            return "DEBUG";
+        case LogLevel::Info:
+            return "INFO";
+        case LogLevel::Warn:
+            return "WARN";
+        case LogLevel::Error:
+            return "ERROR";
+        case LogLevel::Fatal:
+            return "FATAL";
+        default:
+            return "";
     }
 }
 
 template <LogLevel logLevel, typename... Args>
 inline void Log(LocationFormat<std::type_identity_t<Args>...> format, Args&&... args) {
-    const auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startTime).count();
+    const auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_ Time::startTime).count();
 
     // Would print as "[HH:MM:SS.MS] [LOGLEVEL] [FUNCTION_NAME in FILE_PATH:LINE]: LOG_MESSAGE"
     std::println(
@@ -84,7 +92,7 @@ inline void Log(const Error& error) {
 
 template <LogLevel logLevel, typename... Args>
 inline void BasicLog(std::format_string<Args...> format, Args&&... args) {
-    const auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startTime).count();
+    const auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_ Time::startTime).count();
 
     // Would print as "[HH:MM:SS.MS] [LOGLEVEL]: LOG_MESSAGE"
     std::println(
