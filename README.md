@@ -1,3 +1,6 @@
+> [!WARNING]
+> This is not functional and is still in early development.
+
 ## Build
 
 Run these commands from the repository root.
